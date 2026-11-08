@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messtest Spiel-Leistung</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<style>
+  html, body { margin: 0; height: 100%; background: #0b1017; color: #dce6f0; font: 14px/1.45 system-ui, sans-serif; }
+  #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #panel { position: fixed; top: 16px; left: 16px; max-width: min(560px, calc(100% - 32px)); background: rgba(10, 16, 24, .88);
+    border: 1px solid #2c4057; border-radius: 8px; padding: 14px 16px; }
+  h1 { font-size: 17px; margin: 0 0 6px; }
+  p { margin: 6px 0; color: #9fb3c8; }
+  button { background: #2f6fb0; color: #fff; border: 0; border-radius: 6px; padding: 8px 16px; font-size: 14px; cursor: pointer; }
+  button:disabled { background: #3a4654; cursor: default; }
+  #log { margin-top: 10px; font: 12.5px/1.5 ui-monospace, monospace; white-space: pre-wrap; max-height: 50vh; overflow: auto; }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="panel">
+  <h1>Messtest Spiel-Leistung</h1>
+  <p>Lädt Räume aus der Datenbank und misst Bildrate und Renderzeit in 5 Szenarien. Dauer etwa 2–4 Minuten.
+     Bitte das Fenster dabei im Vordergrund lassen, andere Programme möglichst schließen und am Laptop das Netzteil anschließen.</p>
+  <button id="start">Start</button> <button id="diag">Diagnose (Laptop)</button>
+  <div id="log"></div>
+</div>
+<script type="module">
+// Messtest für die Spielplanung: gleiche Szenarien wie build/tools/streaming.mjs, aber auf der echten GPU des Besuchers.
+// Ergebnis wird per POST /messtest auf dem Server gespeichert (data/messtest/).
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { batchGroup } from '/ui/batching.js';
+
+const KIT = {
+  wall: [0xaab4c0, .55, .45], wallDark: [0x4a6a8c, .6, .45], copper: [0xb08a59, .8, .35], pillar: [0xd9e0e6, .35, .4],
+  hull: [0xf0f0ec, .2, .4], floor: [0x4f4a42, .5, .6], floorUpper: [0x5a544b, .5, .6], ceiling: [0x2e3135, .4, .7],
+  stair: [0x8a6e4b, .7, .45], door: [0x8e98a4, .75, .35], glass: [0x6aa8e0, .1, .05], rail: [0xc49a5e, .9, .2],
+  glow: [0x6fe3ff, 0, .5, 0x6fe3ff], amberGlow: [0xffb060, 0, .5, 0xffb060],
+};
+const kitMat = {};
+const kit = (name) => {
+  const k = name.slice(4);
+  if (!kitMat[k]) {
+    const [c, m, r, e] = KIT[k] || [0xff00ff, 0, 1];
+    kitMat[k] = new THREE.MeshStandardMaterial({ name, color: c, metalness: m, roughness: r, emissive: e || 0, emissiveIntensity: e ? 1.6 : 0, transparent: k === 'glass', opacity: k === 'glass' ? 0.35 : 1 });
+  }
+  return kitMat[k];
+};
+const logEl = document.getElementById('log');
+const log = (t) => { logEl.textContent += t + '\n'; logEl.scrollTop = logEl.scrollHeight; };
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.info.autoReset = false;
+const resize = () => { renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5)); renderer.setSize(innerWidth, innerHeight, false); };
+resize(); addEventListener('resize', resize);
+const gl = renderer.getContext();
+const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+const gpu = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+const nextFrame = () => new Promise((r) => requestAnimationFrame(r));
+const isDefaultOBR = (o) => o.onBeforeRender === THREE.Object3D.prototype.onBeforeRender;
+const modCache = {};
+const imp = (u) => (modCache[u] ||= import(u));
+
+let modelList = null;
+async function urls() {
+  if (!modelList) {
+    const d = await (await fetch('/models')).json();
+    modelList = {};
+    for (const m of d.models) if (m.models && m.models.js) modelList[m.id] = `${m.models.js.url}?v=${encodeURIComponent(m.models.js.updated_at || '')}`;
+  }
+  return modelList;
+}
+
+// opts: scale (Faktor auf die Pixeldichte), lambert (einfaches Licht-Modell statt PBR), shellOnly (Raum ohne Objekte)
+async function scenario(rooms, merge, maxLights, v2 = false, batch = false, opts = {}) {
+  const pr0 = renderer.getPixelRatio();
+  if (opts.scale) { renderer.setPixelRatio(pr0 * opts.scale); renderer.setSize(innerWidth, innerHeight, false); }
+  try { return await scenarioInner(rooms, merge, maxLights, v2, batch, opts); }
+  finally { renderer.setPixelRatio(pr0); renderer.setSize(innerWidth, innerHeight, false); }
+}
+async function scenarioInner(rooms, merge, maxLights, v2, batch, opts) {
+  const U = await urls();
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x10161e);
+  scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x1a1410, 0.8));
+  const cam = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.05, 400);
+  const t0 = performance.now();
+  const groups = await Promise.all(rooms.filter((r) => U[r]).map(async (rid) => {
+    const root = (await imp(U[rid])).create({ sound: false });
+    root.updateMatrixWorld(true);
+    const places = [];
+    root.traverse((o) => { const mm = o.name.match(/^PLACE_(OBJ-\d{3})/); if (mm) places.push([mm[1], o]); });
+    const insts = (await Promise.all(places.map(async ([oid, a]) => {
+      if (!U[oid] || opts.shellOnly) return null;
+      try { const i = (await imp(U[oid])).create({ sound: false }); a.matrixWorld.decompose(i.position, i.quaternion, i.scale); return i; } catch (e) { return null; }
+    }))).filter(Boolean);
+    const g = new THREE.Group(); g.name = rid; g.add(root); insts.forEach((i) => g.add(i));
+    return { g, root, insts };
+  }));
+  const loadMs = performance.now() - t0;
+  // Räume nebeneinander aufreihen
+  let x = 0;
+  for (const r of groups) { const b = new THREE.Box3().setFromObject(r.root); r.g.position.x = x - b.min.x; x += b.max.x - b.min.x + 4; scene.add(r.g); }
+  scene.updateMatrixWorld(true);
+  const lamps = [];
+  scene.traverse((o) => {
+    if (/^COL_/.test(o.name)) { o.visible = false; return; }
+    if (o.isMesh) { const ms = [].concat(o.material).map((m) => (m && /^KIT_/.test(m.name) ? kit(m.name) : m)); o.material = Array.isArray(o.material) ? ms : ms[0]; }
+    if (/^LAMP_/.test(o.name)) lamps.push(o);
+  });
+  lamps.slice(0, maxLights).forEach((o) => o.add(new THREE.PointLight(o.userData.color || '#ffb060', (o.userData.intensity ?? 15) * 0.4, o.userData.distance ?? 10, 2)));
+  const b0 = groups.length ? new THREE.Box3().setFromObject(groups[0].g) : new THREE.Box3(new THREE.Vector3(-5, 0, -5), new THREE.Vector3(5, 3, 5));
+  const cz = (b0.min.z + b0.max.z) / 2;
+  cam.position.set(b0.min.x + 1.5, 1.7, cz); cam.lookAt(x, 1.5, cz);
+  let mergeMs = 0, merged = 0;
+  if (merge) {
+    const tm = performance.now();
+    // bewegte Teile beobachten (Animationen + jede Aktion hin und zurück), Rest je Raum und Material zusammenführen
+    const dyn = new Set();
+    const mkey = (m) => m ? [m.color?.getHex(), m.emissive?.getHex(), m.emissiveIntensity, m.opacity, m.visible].join('|') : '';
+    const state = (o) => o.matrixWorld.elements.join(',') + o.visible + (v2 ? '' : [].concat(o.material).map(mkey).join());
+    const all = []; scene.traverse((o) => { if (o.isMesh) all.push(o); });
+    const snap = new Map(all.map((o) => [o, state(o)]));
+    const matSnap = new Map(); all.forEach((o) => [].concat(o.material).forEach((m) => m && matSnap.set(m, mkey(m))));
+    const matChanged = new Set();
+    const probe = new THREE.WebGLRenderTarget(8, 8);
+    all.forEach((o) => { o.userData._fc = o.frustumCulled; o.frustumCulled = false; });
+    const run = async (ms) => {
+      renderer.setRenderTarget(probe);
+      const end = performance.now() + ms;
+      while (performance.now() < end) { renderer.render(scene, cam); await nextFrame(); }
+      renderer.setRenderTarget(null);
+      scene.updateMatrixWorld(true);
+      all.forEach((o) => { if (state(o) !== snap.get(o)) dyn.add(o); });
+      for (const [m, k] of matSnap) if (mkey(m) !== k) matChanged.add(m);
+    };
+    await run(1000);
+    const acts = [];
+    for (const r of groups) [r.root, ...r.insts].forEach((i) => (i.userData.actions || []).forEach((a) => acts.push(a)));
+    acts.forEach((a) => { try { a.run(); } catch (e) {} });
+    await run(2500);
+    acts.forEach((a) => { try { a.run(); } catch (e) {} });
+    await run(2500);
+    all.forEach((o) => { o.frustumCulled = o.userData._fc; if (!isDefaultOBR(o) || [].concat(o.material).some((m) => m?.map?.isCanvasTexture)) dyn.add(o); });
+    const inDyn = (o) => { for (let p = o; p; p = p.parent) if (dyn.has(p)) return true; return false; };
+    // v2: gleiche Farbe/Oberfläche = ein Material; nur animierte Materialien bleiben eigene Objekte
+    const matKey = (m) => (!v2 || matChanged.has(m)) ? m.uuid : [m.type, m.color?.getHex(), m.emissive?.getHex(), m.emissiveIntensity, m.metalness, m.roughness, m.opacity, m.transparent, m.side, m.map?.uuid, m.emissiveMap?.uuid, m.vertexColors].join('|');
+    const buckets = new Map();
+    const hide = [];
+    scene.traverse((o) => {
+      if (!o.isMesh || o.isInstancedMesh || Array.isArray(o.material) || inDyn(o)) return;
+      for (let p = o; p; p = p.parent) if (!p.visible) return;
+      let g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
+      for (const a of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(a)) g.deleteAttribute(a);
+      if (!g.attributes.normal) g.computeVertexNormals();
+      if (!g.attributes.uv) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
+      g.morphAttributes = {};
+      g.applyMatrix4(o.matrixWorld);
+      let room = o; while (room.parent && room.parent !== scene) room = room.parent;
+      const k = room.name + '#' + matKey(o.material);
+      if (!buckets.has(k)) buckets.set(k, { mat: o.material, geos: [] });
+      buckets.get(k).geos.push(g); hide.push(o);
+    });
+    hide.forEach((o) => { o.visible = false; });
+    for (const { mat, geos } of buckets.values()) { const g = mergeGeometries(geos, false); if (g) scene.add(new THREE.Mesh(g, mat)); geos.forEach((q) => q.dispose()); }
+    merged = hide.length;
+    mergeMs = performance.now() - tm;
+  }
+  // Bündeln (BatchedMesh) je Raum
+  let batchMs = 0, batchStats = null;
+  const bundles = [];
+  if (batch) {
+    const tb = performance.now();
+    for (const r of groups) bundles.push(batchGroup(r.g, { renderer, scene, camera: cam }));
+    batchMs = performance.now() - tb;
+    batchStats = bundles.reduce((a, b) => { for (const k in b.stats) a[k] = (a[k] || 0) + b.stats[k]; return a; }, {});
+  }
+  const tick = () => { for (const b of bundles) b.update(); };
+  if (opts.lambert) {
+    // Lambert: gleiche Farben, aber ohne PBR (Metall/Rauheit) – deutlich billiger pro Pixel
+    scene.traverse((o) => {
+      if (!o.isMesh) return;
+      const conv = (m) => m && !m.isMeshBasicMaterial ? new THREE.MeshLambertMaterial({ color: m.color, emissive: m.emissive || 0, emissiveIntensity: m.emissiveIntensity ?? 1, map: m.map || null, emissiveMap: m.emissiveMap || null, transparent: m.transparent, opacity: m.opacity, side: m.side }) : m;
+      o.material = Array.isArray(o.material) ? o.material.map(conv) : conv(o.material);
+    });
+  }
+  const tc = performance.now();
+  await renderer.compileAsync(scene, cam);
+  const compileMs = performance.now() - tc;
+  renderer.info.reset(); renderer.render(scene, cam);
+  const calls = renderer.info.render.calls, tris = renderer.info.render.triangles;
+  // 1) Bildrate wie im Spiel: 4 s mit langsam schwenkender Kamera (begrenzt durch die Bildwiederholrate)
+  const dir = new THREE.Vector3(x - cam.position.x, 0, 0);
+  const frames = [];
+  let last = performance.now();
+  const end = last + 4000;
+  while (performance.now() < end) {
+    const a = Math.sin((performance.now() - tc) / 1500) * 0.6;
+    cam.lookAt(cam.position.x + Math.cos(a) * dir.length(), 1.5, cz + Math.sin(a) * dir.length());
+    tick(); renderer.render(scene, cam);
+    await nextFrame();
+    const now = performance.now(); frames.push(now - last); last = now;
+  }
+  frames.sort((p, q) => p - q);
+  const fps = 1000 / (frames.reduce((s, v) => s + v, 0) / frames.length);
+  const p95 = frames.at(Math.floor(frames.length * 0.95));
+  // 2) reine Renderzeit ohne Bildraten-Grenze: 30 Bilder direkt hintereinander, jeweils bis die GPU fertig ist
+  const px = new Uint8Array(4);
+  const tr = performance.now();
+  for (let i = 0; i < 30; i++) { tick(); renderer.render(scene, cam); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
+  const renderMs = (performance.now() - tr) / 30;
+  // JS-Zeit: nur der render()-Aufruf, ohne auf die GPU zu warten
+  let tj = 0;
+  for (let i = 0; i < 30; i++) { const t = performance.now(); tick(); renderer.render(scene, cam); tj += performance.now() - t; gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
+  const jsMs = tj / 30;
+  // GPU-Zeit per Timer-Query, falls der Browser sie anbietet
+  let gpuMs = null;
+  const tq = gl.getExtension('EXT_disjoint_timer_query_webgl2');
+  if (tq) {
+    const qs = [];
+    for (let i = 0; i < 10; i++) { const q = gl.createQuery(); gl.beginQuery(tq.TIME_ELAPSED_EXT, q); tick(); renderer.render(scene, cam); gl.endQuery(tq.TIME_ELAPSED_EXT); qs.push(q); }
+    for (let w = 0; w < 60 && !gl.getQueryParameter(qs.at(-1), gl.QUERY_RESULT_AVAILABLE); w++) await nextFrame();
+    if (!gl.getParameter(tq.GPU_DISJOINT_EXT)) { let sum = 0, n = 0; for (const q of qs) if (gl.getQueryParameter(q, gl.QUERY_RESULT_AVAILABLE)) { sum += gl.getQueryParameter(q, gl.QUERY_RESULT) / 1e6; n++; } if (n) gpuMs = sum / n; }
+    qs.forEach((q) => gl.deleteQuery(q));
+  }
+  // halbe Auflösung: sinkt die Zeit stark, bremst die Grafikkarte (Pixel), sonst die CPU (Draw Calls)
+  const pr = renderer.getPixelRatio();
+  renderer.setPixelRatio(pr * 0.5); renderer.setSize(innerWidth, innerHeight, false);
+  const th = performance.now();
+  for (let i = 0; i < 30; i++) { tick(); renderer.render(scene, cam); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
+  const renderHalbMs = (performance.now() - th) / 30;
+  renderer.setPixelRatio(pr); renderer.setSize(innerWidth, innerHeight, false);
+  const programme = renderer.info.programs.length;
+  // aufräumen
+  bundles.forEach((b) => b.dispose());
+  scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); [].concat(o.material || []).forEach((m) => { if (m && !/^KIT_/.test(m.name)) { m.map?.dispose(); m.dispose(); } }); });
+  renderer.renderLists.dispose();
+  return {
+    raeume: groups.length, buendelMs: Math.round(batchMs), buendel: batchStats, lampen: lamps.length, lichter: Math.min(maxLights, lamps.length), zusammengefuehrt: merged,
+    ladenMs: Math.round(loadMs), mergeMs: Math.round(mergeMs), compileMs: Math.round(compileMs),
+    drawCalls: calls, dreiecke: tris, programme, jsMs: +jsMs.toFixed(2), gpuMs: gpuMs === null ? null : +gpuMs.toFixed(2), renderHalbMs: +renderHalbMs.toFixed(2), fps: +fps.toFixed(1), bildMsP95: +p95.toFixed(1), renderMs: +renderMs.toFixed(2),
+  };
+}
+
+async function runTests(ev, kind) {
+  document.querySelectorAll('button').forEach((x) => (x.disabled = true));
+  logEl.textContent = '';
+  const U = await urls();
+  const all = Object.keys(U).filter((k) => k.startsWith('ATL-')).sort();
+  const R3 = ['ATL-001', 'ATL-049', 'ATL-009'];
+  const A1 = ['ATL-001'];
+  const tests = kind === 'diag' ? [
+    ['Torhalle gebündelt, 8 Lampen (Standard)', A1, false, 8, false, true],
+    ['leere Szene (Grundlast)', [], false, 0],
+    ['nur Raumhülle, ohne Objekte, gebündelt, 8 Lampen', A1, false, 8, false, true, { shellOnly: true }],
+    ['Torhalle gebündelt, ohne Lampenlicht', A1, false, 0, false, true],
+    ['Torhalle gebündelt, 8 Lampen, Lambert statt PBR', A1, false, 8, false, true, { lambert: true }],
+    ['Torhalle gebündelt, 8 Lampen, 50 % Auflösung', A1, false, 8, false, true, { scale: 0.5 }],
+    ['Torhalle gebündelt, 8 Lampen, 70 % Auflösung', A1, false, 8, false, true, { scale: 0.7 }],
+    ['Torhalle gebündelt, 8 Lampen (Standard, Wiederholung)', A1, false, 8, false, true],
+  ] : [
+    ['1 Raum (Torhalle), roh, 8 Lampen', A1, false, 8],
+    ['1 Raum (Torhalle), gebündelt, 8 Lampen', A1, false, 8, false, true],
+    ['3 Räume, roh, 8 Lampen', R3, false, 8],
+    ['3 Räume, gebündelt, 8 Lampen', R3, false, 8, false, true],
+    ['3 Räume, gebündelt, 2 Lampen', R3, false, 2, false, true],
+  ];
+  const result = {
+    zeit: new Date().toISOString(), version: 3, art: kind, gpu, userAgent: navigator.userAgent,
+    aufloesung: `${renderer.domElement.width}×${renderer.domElement.height}`, pixelRatio: renderer.getPixelRatio(),
+    bildschirmHz: null, szenarien: [],
+  };
+  log(`GPU: ${gpu}\nAuflösung: ${result.aufloesung}`);
+  // Bildwiederholrate des Monitors schätzen
+  { const t = []; let l = performance.now(); for (let i = 0; i < 60; i++) { await nextFrame(); const n = performance.now(); t.push(n - l); l = n; } t.sort((a, b) => a - b); result.bildschirmHz = Math.round(1000 / t.at(30)); }
+  log(`Monitor: ca. ${result.bildschirmHz} Hz\n`);
+  for (const [name, rooms, merge, lights, v2, batch, opts] of tests) {
+    log(`▶ ${name} …`);
+    try {
+      const r = await scenario(rooms, merge, lights, !!v2, !!batch, opts || {});
+      result.szenarien.push({ name, ...r });
+      log(`  ${r.fps} fps · Renderzeit ${r.renderMs} ms (halbe Auflösung ${r.renderHalbMs} ms, JS ${r.jsMs} ms${r.gpuMs !== null ? ', GPU ' + r.gpuMs + ' ms' : ''}) · ${r.drawCalls} Draw Calls · Shader ${(r.compileMs / 1000).toFixed(1)} s`);
+    } catch (e) { result.szenarien.push({ name, fehler: String(e) }); log('  Fehler: ' + e); }
+  }
+  try {
+    const res = await fetch('/messtest', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(result) });
+    log(res.ok ? '\nFertig – Ergebnis ist auf dem Server gespeichert.' : '\nFertig, aber Speichern fehlgeschlagen (' + res.status + ').');
+  } catch (e) { log('\nFertig, aber Speichern fehlgeschlagen: ' + e); }
+  document.querySelectorAll('button').forEach((x) => (x.disabled = false));
+}
+document.getElementById('start').onclick = (ev) => runTests(ev, 'voll');
+document.getElementById('diag').onclick = (ev) => runTests(ev, 'diag');
+</script>
+</body></html>

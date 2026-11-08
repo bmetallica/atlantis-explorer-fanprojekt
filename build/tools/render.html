@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<script type="importmap">
+{ "imports": { "three": "/tools/node_modules/three/build/three.module.js", "three/addons/": "/tools/node_modules/three/examples/jsm/" } }
+</script>
+<style>html,body{margin:0;background:#0b1017}canvas{display:block}</style></head>
+<body><canvas id="c" width="1600" height="1000"></canvas>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const KIT = {
+  wall: [0xaab4c0, .55, .45], wallDark: [0x4a6a8c, .6, .45], copper: [0xb08a59, .8, .35], pillar: [0xd9e0e6, .35, .4],
+  hull: [0xf0f0ec, .2, .4], floor: [0x4f4a42, .5, .6], floorUpper: [0x5a544b, .5, .6], ceiling: [0x2e3135, .4, .7],
+  stair: [0x8a6e4b, .7, .45], door: [0x8e98a4, .75, .35], glass: [0x6aa8e0, .1, .05], rail: [0xc49a5e, .9, .2],
+  glow: [0x6fe3ff, 0, .5, 0x6fe3ff], amberGlow: [0xffb060, 0, .5, 0xffb060],
+};
+const kitMat = {};
+function kit(name) {
+  const k = name.slice(4);
+  if (!kitMat[k]) {
+    const [c, m, r, e] = KIT[k] || [0xff00ff, 0, 1];
+    kitMat[k] = new THREE.MeshStandardMaterial({ name, color: c, metalness: m, roughness: r, emissive: e || 0, emissiveIntensity: e ? 1.6 : 0,
+      transparent: k === 'glass', opacity: k === 'glass' ? 0.35 : 1 });
+  }
+  return kitMat[k];
+}
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setScissorTest(true);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x10161e);
+scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x1a1410, 0.6));
+const sun = new THREE.DirectionalLight(0xffffff, 1.3); sun.position.set(5, 9, 7); scene.add(sun);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.MeshStandardMaterial({ color: 0x2a2f36, roughness: .8 }));
+floor.rotation.x = -Math.PI / 2; scene.add(floor);
+const grid = new THREE.GridHelper(60, 60, 0x45678a, 0x2c4057); grid.position.y = 0.002; scene.add(grid);
+const player = new THREE.Mesh(new THREE.CapsuleGeometry(0.31, 0.75, 6, 16), new THREE.MeshStandardMaterial({ color: 0x9fd0ff, transparent: true, opacity: .45 }));
+player.position.y = 1.37 / 2; scene.add(player);
+
+const params = new URLSearchParams(location.search);
+const mod = await import(params.get('m') + '?t=' + Date.now());
+const root = mod.create({});
+scene.add(root);
+root.traverse((o) => {
+  if (/^COL_/.test(o.name)) { o.visible = false; return; }
+  if (o.isMesh) {
+    const ms = [].concat(o.material).map((m) => (m && /^KIT_/.test(m.name) ? kit(m.name) : m));
+    o.material = Array.isArray(o.material) ? ms : ms[0];
+  }
+  if (/^LAMP_/.test(o.name)) {
+    const l = new THREE.PointLight(o.userData.color || '#ffb060', (o.userData.intensity ?? 15) * 0.4, o.userData.distance ?? 10, 2);
+    o.add(l);
+  }
+});
+root.updateMatrixWorld(true);
+const isRoom = params.get('raum') === '1' || /^raum_/.test(params.get('m').split('/').pop());
+const ceilings = [];
+if (isRoom) {
+  root.traverse((o) => { if (/^(decke|ceiling)/i.test(o.name)) ceilings.push(o); });
+  floor.visible = false; grid.position.y = -0.02;
+  const places = [];
+  root.traverse((o) => { const mm = o.name.match(/^PLACE_(OBJ-\d{3})/); if (mm) places.push([mm[1], o]); });
+  window.placeStats = { total: places.length, ok: 0, missing: [] };
+  for (const [oid, anchor] of places) {
+    try {
+      const om = await import(`/objmodel/${oid}.js`);
+      const inst = om.create({});
+      inst.traverse((o) => { if (/^COL_/.test(o.name)) o.visible = false; else if (o.isMesh) { const ms = [].concat(o.material).map((m) => (m && /^KIT_/.test(m.name) ? kit(m.name) : m)); o.material = Array.isArray(o.material) ? ms : ms[0]; } });
+      anchor.matrixWorld.decompose(inst.position, inst.quaternion, inst.scale);
+      scene.add(inst); window.placeStats.ok++;
+    } catch (e) { window.placeStats.missing.push(oid); }
+  }
+}
+const box = new THREE.Box3();
+root.traverse((o) => { if (o.isMesh && o.visible) box.expandByObject(o); });
+const size = box.getSize(new THREE.Vector3()), center = box.getCenter(new THREE.Vector3());
+player.position.x = box.min.x - Math.max(0.5, size.x * 0.25) - 0.31; player.position.z = box.min.z - 0.1; // links hinten, verdeckt nichts
+const d = Math.max(size.x, size.y, size.z, 0.5) * 1.7 + 1.0;
+const roomViews = {
+  oben: () => { ceilings.forEach((c) => (c.visible = false)); cam.position.set(center.x + 0.001, box.max.y + Math.max(size.x, size.z) * 1.1, center.z + Math.max(size.x, size.z) * 0.35); },
+  schraeg: () => { ceilings.forEach((c) => (c.visible = false)); cam.position.set(center.x + size.x * 0.9, box.max.y + Math.max(size.x, size.z) * 0.6, center.z - size.z * 0.9); },
+  innen: () => { ceilings.forEach((c) => (c.visible = true)); cam.position.set(center.x, 1.6, box.min.z + Math.min(1.2, size.z * 0.15)); },
+  innen2: () => { ceilings.forEach((c) => (c.visible = true)); cam.position.set(center.x + size.x * 0.3, 1.6, box.max.z - Math.min(1.2, size.z * 0.15)); },
+};
+const roomTarget = { innen: () => new THREE.Vector3(center.x, 1.6, box.max.z), innen2: () => new THREE.Vector3(center.x - size.x * 0.2, 1.5, box.min.z) };
+const cam = new THREE.PerspectiveCamera(40, 1.6, 0.02, 300);
+// große Modelle (Stadtteile bis mehrere 100 m): Sichtweite an die Größe anpassen
+cam.far = Math.max(300, d * 4); cam.near = Math.max(0.02, d / 20000); cam.updateProjectionMatrix();
+const views = {
+  vorne: () => { cam.position.set(center.x + d * .35, center.y + d * .2, center.z + d); },
+  seite: () => { cam.position.set(center.x + d, center.y + d * .1, center.z + .001); },
+  oben: () => { cam.position.set(center.x + .001, center.y + d, center.z + d * .15); },
+  hinten: () => { cam.position.set(center.x - d * .45, center.y + d * .3, center.z - d); },
+};
+function label(ctx, txt, x, y) { ctx.fillStyle = 'rgba(0,0,0,.6)'; ctx.fillRect(x, y, ctx.measureText(txt).width + 14, 24); ctx.fillStyle = '#fff'; ctx.fillText(txt, x + 7, y + 17); }
+const over = document.createElement('canvas'); over.width = 1600; over.height = 1000;
+window.renderGrid = (names, title) => {
+  const W = 800, H = 500;
+  names.forEach((n, i) => {
+    const x = (i % 2) * W, y = (1 - Math.floor(i / 2)) * H;
+    const vn = n.view || n;
+    if (n.pos) { ceilings.forEach((c) => (c.visible = !!n.decke)); cam.position.fromArray(n.pos); cam.fov = n.fov || 70; }   // freie Kamera {pos, target, label}
+    else { (roomViews[vn] || views[vn])(); cam.fov = vn.startsWith('innen') ? 70 : 40; }
+    cam.aspect = W / H; cam.updateProjectionMatrix(); cam.lookAt(n.target ? new THREE.Vector3().fromArray(n.target) : roomTarget[vn] ? roomTarget[vn]() : center);
+    renderer.setViewport(x, y, W, H); renderer.setScissor(x, y, W, H);
+    renderer.render(scene, cam);
+  });
+  const ctx = over.getContext('2d');
+  ctx.clearRect(0, 0, 1600, 1000); ctx.drawImage(canvas, 0, 0);
+  ctx.font = '15px sans-serif';
+  names.forEach((n, i) => label(ctx, n.label || n, (i % 2) * W + 8, Math.floor(i / 2) * H + 8));
+  if (names.length === 1) {
+    const c2 = document.createElement('canvas'); c2.width = W; c2.height = H;
+    const x2 = c2.getContext('2d'); x2.drawImage(over, 0, 0, W, H, 0, 0, W, H);
+    x2.font = '15px sans-serif'; label(x2, `${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} m`, 8, H - 32);
+    return c2.toDataURL('image/png');
+  }
+  label(ctx, `${title} · ${size.x.toFixed(2)} × ${size.y.toFixed(2)} × ${size.z.toFixed(2)} m · Raster 1 m · Figur 1,37 m`, 8, 968);
+  return over.toDataURL('image/png');
+};
+window.actions = Array.isArray(root.userData.actions) ? root.userData.actions.map((a) => a.label) : [];
+window.runAction = (i) => root.userData.actions[i].run();
+// eigene Render-Schleife, damit onBeforeRender-Animationen laufen
+window.advance = (ms) => new Promise((res) => {
+  const end = performance.now() + ms;
+  const step = () => { views.vorne(); cam.lookAt(center); renderer.setViewport(0, 0, 8, 8); renderer.setScissor(0, 0, 8, 8); renderer.render(scene, cam); performance.now() < end ? requestAnimationFrame(step) : res(); };
+  step();
+});
+window.ready = true;
+</script></body></html>

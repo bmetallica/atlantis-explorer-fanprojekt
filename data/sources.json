@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "title": "Stargate Atlantis — Quellenkatalog",
+    "version": "1.0",
+    "description": "Quellen mit Zuverlässigkeitsklassen. A=BELEGT (direkt dokumentiert), B=REKONSTRUIERT (plausibel), C=ERGÄNZT (Annahme)."
+  },
+  "sources": [
+    {
+      "id": "SRC-01",
+      "name": "Joseph Mallozzi Blog — Produktions-Set-Pläne",
+      "url": "https://josephmallozzi.com",
+      "category": "A",
+      "type": "Produktionsdokumentation (Showrunner/Produzent)",
+      "note": "Original-Set-Pläne aus 'Adrift/Lifeline' (Saison 4) und weiteren Staffeln. Primäre A-Quelle für Grundrisse."
+    },
+    {
+      "id": "SRC-02",
+      "name": "Stargate Fandom Wiki — Atlantis",
+      "url": "https://stargate.fandom.com/wiki/Atlantis",
+      "category": "A",
+      "type": "Wiki (dokumentierte Locations/Areas)",
+      "note": "Offizielles Register aller dokumentierten Räume und Technologien."
+    },
+    {
+      "id": "SRC-03",
+      "name": "Stargate Fandom Wiki — Raum-Subseiten",
+      "url": "https://stargate.fandom.com/wiki/",
+      "category": "A",
+      "type": "Wiki (raum-spezifische Artikel + Screencaps)",
+      "note": "Jeder Raum hat eigene Seite mit 1-4 Bildern (static.wikia.nocookie.net CDN)."
+    },
+    {
+      "id": "SRC-04",
+      "name": "Stargate Wiki Deutschland",
+      "url": "https://stargate-wiki.de",
+      "category": "B",
+      "type": "Fan-Wiki (deutsch)",
+      "note": "Deutsche Raumnamen und Zusammenfassungen."
+    },
+    {
+      "id": "SRC-05",
+      "name": "GateWorld",
+      "url": "http://www.gateworld.net",
+      "category": "A",
+      "type": "Produktions- und Seriendokumentation",
+      "note": "Produktionsfotos, Set-Beschreibungen, Episoden-Regie."
+    },
+    {
+      "id": "SRC-06",
+      "name": "Stargate Fusion",
+      "url": "https://www.stargate-fusion.com",
+      "category": "B",
+      "type": "Fan-Foren und Analyse",
+      "note": "Spekulationen und Fan-Pläne; nur als B-Klasse."
+    },
+    {
+      "id": "SRC-07",
+      "name": "Stargate Project (DE)",
+      "url": "https://stargate-project.de",
+      "category": "B",
+      "type": "Fan-Archiv (deutsch)",
+      "note": "Deutsche Zusammenfassungen und Bildarchiv."
+    },
+    {
+      "id": "SRC-08",
+      "name": "Wikipedia — Stargate Atlantis (Production)",
+      "url": "https://en.wikipedia.org/wiki/Stargate_Atlantis",
+      "category": "A",
+      "type": "Produktionsnotizen (Studio-Etage, Gate-Diagonale)",
+      "note": "Belegt: Gate-Raum, Konferenzraum, Kommandantur als eine große Studio-Etage."
+    },
+    {
+      "id": "SRC-09",
+      "name": "Fandom Image CDN",
+      "url": "https://static.wikia.nocookie.net",
+      "category": "A",
+      "type": "Bild-CDN (Screencaps)",
+      "note": "Screencaps mit Attribution; Quelle für 1-4 Bilder je Raum."
+    },
+    {
+      "id": "SRC-10",
+      "name": "Episoden-Regie & Set-Dokumentation (S1-S5)",
+      "url": "https://stargate.fandom.com/wiki/List_of_Stargate_Atlantis_episodes",
+      "category": "A",
+      "type": "Episodenliste",
+      "note": "Vollständige Episodenliste S1-S5 (87 Folgen) für Anhang."
+    }
+  ],
+  "categories": {
+    "A": "BELEGT — direkt dokumentiert (Episode, Set-Plan, Produktionsfoto, offizielle Quelle)",
+    "B": "REKONSTRUIERT — plausibel rekonstruiert aus belegten Fakten",
+    "C": "ERGÄNZT — architektonische Ergänzung / Annahme"
+  }
+}

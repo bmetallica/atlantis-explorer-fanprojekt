@@ -1,0 +1,30 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "/tools/three170/node_modules/three/build/three.module.js" } }</script></head><body>
+<script type="module">
+// Prüft je Raum, ob der begehbare Boden lückenlos von COL_-Kollision abgedeckt ist (Strahlen im 0,5-m-Raster von oben)
+import * as THREE from 'three';
+const ids = (await (await fetch('/list')).json()).filter((i) => i.startsWith('ATL-'));
+const out = {};
+const rc = new THREE.Raycaster();
+for (const id of ids) {
+  try {
+    const root = (await import(`/model/${id}.js`)).create({ sound: false });
+    root.updateMatrixWorld(true);
+    const cols = [], sicht = [];
+    root.traverse((o) => { if (!o.isMesh) return; if (/^COL_/.test(o.name)) cols.push(o); else if (/boden|floor/i.test(o.name)) sicht.push(o); });
+    const box = new THREE.Box3(); sicht.forEach((m) => box.expandByObject(m));
+    if (box.isEmpty()) root.traverse((o) => { if (o.isMesh && !/^COL_/.test(o.name)) box.expandByObject(o); });
+    let n = 0, fehl = 0; const loecher = [];
+    for (let x = box.min.x + 0.6; x < box.max.x - 0.6; x += 0.5) for (let z = box.min.z + 0.6; z < box.max.z - 0.6; z += 0.5) {
+      // nur Stellen, an denen sichtbarer Boden ist
+      rc.set(new THREE.Vector3(x, 1.0, z), new THREE.Vector3(0, -1, 0)); rc.far = 2;
+      if (sicht.length && !rc.intersectObjects(sicht, false).length) continue;
+      n++;
+      rc.set(new THREE.Vector3(x, 1.0, z), new THREE.Vector3(0, -1, 0)); rc.far = 1.6;
+      if (!rc.intersectObjects(cols, false).length) { fehl++; if (loecher.length < 6) loecher.push([+x.toFixed(1), +z.toFixed(1)]); }
+    }
+    out[id] = { punkte: n, ohneBoden: fehl, anteil: n ? +(fehl / n * 100).toFixed(1) : null, beispiele: loecher, cols: cols.length };
+  } catch (e) { out[id] = { fehler: e.message.slice(0, 80) }; }
+}
+window.result = out;
+</script></body></html>

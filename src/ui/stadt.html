@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlantis Stadtansicht</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1017; color: #dce6f0; font: 13px/1.45 system-ui, sans-serif; }
+  #c { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #panel { position: fixed; top: 12px; left: 12px; max-width: min(340px, calc(100% - 24px)); background: rgba(10, 16, 24, .86);
+    border: 1px solid #2c4057; border-radius: 8px; padding: 12px 14px; }
+  h1 { font-size: 15px; margin: 0 0 6px; }
+  label { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  input[type=range] { flex: 1; }
+  #info { color: #9fb3c8; margin-top: 8px; white-space: pre-line; }
+  a { color: #4da3ff; }
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div id="panel">
+  <h1>Atlantis – Stadtansicht</h1>
+  <label>Helligkeit <input type="range" id="hell" min="1" max="10" value="6"></label>
+  <label><input type="checkbox" id="raeume"> Räume als Kästen (anklickbar)</label>
+  <label>Außenhülle <select id="huelle"><option value="vorlage">Vorlage (3D-Druck-Modell)</option><option value="module">Module (MiniMax)</option></select></label>
+  <label><input type="checkbox" id="platzhalter" checked> Fehlende Module als Platzhalter</label>
+  <div id="info">Lade …</div>
+  <div style="margin-top:6px"><a href="/ui/#stadtplan/gesamt">← Stadtplan</a></div>
+</div>
+<script type="module">
+// 3D-Ansicht der Stadt: Außenmodule (data/stadt/STA-xxx) nach data/stadtplan.json, gebündelt (BatchedMesh).
+// Fehlende Module erscheinen als graue Platzhalter in ungefährer Größe.
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { Sky } from 'three/addons/objects/Sky.js';
+import { batchGroup } from '/ui/batching.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const KIT = {
+  wall: { color: 0xaab4c0, metalness: 0.55, roughness: 0.45 }, wallDark: { color: 0x4a6a8c, metalness: 0.6, roughness: 0.45 },
+  copper: { color: 0xb08a59, metalness: 0.8, roughness: 0.35 }, pillar: { color: 0xd9e0e6, metalness: 0.35, roughness: 0.4 },
+  hull: { color: 0xf0f0ec, metalness: 0.2, roughness: 0.4 }, floor: { color: 0x4f4a42, metalness: 0.5, roughness: 0.6 },
+  floorUpper: { color: 0x5a544b, metalness: 0.5, roughness: 0.6 }, ceiling: { color: 0x2e3135, metalness: 0.4, roughness: 0.7 },
+  stair: { color: 0x8a6e4b, metalness: 0.7, roughness: 0.45 }, door: { color: 0x8e98a4, metalness: 0.75, roughness: 0.35 },
+  glass: { color: 0x6aa8e0, metalness: 0.1, roughness: 0.05, transparent: true, opacity: 0.35 }, rail: { color: 0xc49a5e, metalness: 0.9, roughness: 0.2 },
+  glow: { color: 0x6fe3ff, emissive: 0x6fe3ff, emissiveIntensity: 1.3 }, amberGlow: { color: 0xffb060, emissive: 0xffb060, emissiveIntensity: 1.3 },
+};
+const kitCache = {};
+const kit = (name) => (kitCache[name] ||= new THREE.MeshStandardMaterial({ name, ...(KIT[name.slice(4)] || { color: 0xff00ff }) }));
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', logarithmicDepthBuffer: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0xe4edf3, 1400, 6200);
+const camera = new THREE.PerspectiveCamera(55, 1, 1, 12000);
+camera.position.set(820, 380, 980);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(0, 40, 0); controls.maxDistance = 4000; controls.minDistance = 20; controls.maxPolarAngle = Math.PI * 0.49;
+// Startansicht per Adresse: ?cam=x,y,z&ziel=x,y,z&raeume=1
+const Q = new URLSearchParams(location.search);
+if (Q.get('cam')) camera.position.fromArray(Q.get('cam').split(',').map(Number));
+if (Q.get('ziel')) controls.target.fromArray(Q.get('ziel').split(',').map(Number));
+controls.update();
+const resize = () => { renderer.setSize(innerWidth, innerHeight, false); camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); };
+resize(); addEventListener('resize', resize);
+
+// Himmel, Sonne, Licht
+const sky = new Sky(); sky.scale.setScalar(10000); scene.add(sky);
+const sunDir = new THREE.Vector3().setFromSphericalCoords(1, THREE.MathUtils.degToRad(62), THREE.MathUtils.degToRad(140));
+Object.assign(sky.material.uniforms, {}); sky.material.uniforms.sunPosition.value.copy(sunDir);
+sky.material.uniforms.turbidity.value = 4; sky.material.uniforms.rayleigh.value = 1.6; sky.material.uniforms.mieCoefficient.value = 0.004;
+scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x2a3a48, 0.45));
+const sun = new THREE.DirectionalLight(0xfff2e0, 1.9); sun.position.copy(sunDir).multiplyScalar(1000); scene.add(sun);
+const pm = new THREE.PMREMGenerator(renderer);
+scene.environment = pm.fromScene(sky).texture;
+scene.environmentIntensity = 0.55;   // Himmelsspiegelung auf Glas und Wasser
+
+// Wasser: große Fläche mit selbst erzeugter Wellen-Normalmap, langsam verschoben (bewusst schlicht)
+function waveNormals(size = 256) {
+  const c = document.createElement('canvas'); c.width = c.height = size;
+  const g = c.getContext('2d'); const img = g.createImageData(size, size);
+  const h = (x, y) => Math.sin(x * 0.11) * 0.6 + Math.sin(y * 0.07 + x * 0.03) * 0.8 + Math.sin((x + y) * 0.19) * 0.35 + Math.sin(x * 0.31 - y * 0.23) * 0.2;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const dx = h(x + 1, y) - h(x - 1, y), dy = h(x, y + 1) - h(x, y - 1);
+    const n = new THREE.Vector3(-dx, -dy, 2).normalize(), i = (y * size + x) * 4;
+    img.data[i] = (n.x * 0.5 + 0.5) * 255; img.data[i + 1] = (n.y * 0.5 + 0.5) * 255; img.data[i + 2] = (n.z * 0.5 + 0.5) * 255; img.data[i + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(180, 180); return t;
+}
+const water = new THREE.Mesh(new THREE.PlaneGeometry(19000, 19000),
+  new THREE.MeshStandardMaterial({ color: 0x1b4866, roughness: 0.18, metalness: 0.35, normalMap: waveNormals(), normalScale: new THREE.Vector2(0.35, 0.35) }));
+water.rotation.x = -Math.PI / 2; water.position.y = 0; scene.add(water);
+
+// Platzhalter in ungefährer Größe (bis MiniMax das Modul fertig hat)
+function pierShape(len, w0, w1) {
+  const s = new THREE.Shape();
+  s.moveTo(-w0 / 2, 0); s.lineTo(-w1 / 2, len - 30); s.lineTo(0, len); s.lineTo(w1 / 2, len - 30); s.lineTo(w0 / 2, 0); s.closePath();
+  const g = new THREE.ExtrudeGeometry(s, { depth: 25, bevelEnabled: false }); g.rotateX(Math.PI / 2); return g;   // Deck oben bei y = 0
+}
+function placeholder(id) {
+  const m = new THREE.MeshStandardMaterial({ color: 0x8e99a6, metalness: 0.3, roughness: 0.6 });
+  const g = new THREE.Group();
+  const add = (geo, y = 0, x = 0, z = 0) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); g.add(o); };
+  switch (id) {
+    case 'STA-001': add(new THREE.BoxGeometry(64, 76, 44), 38, 7, 0); add(new THREE.BoxGeometry(30, 44, 18), 98, 0, -13); add(new THREE.ConeGeometry(10, 20, 6), 130, 0, -13); break;
+    case 'STA-002': add(new THREE.CylinderGeometry(230, 200, 36, 24), -18); break;
+    case 'STA-003': add(pierShape(450, 150, 80)); break;
+    case 'STA-004': add(pierShape(280, 95, 50)); break;
+    case 'STA-005': add(new THREE.BoxGeometry(24, 90, 24), 45); break;
+    case 'STA-006': add(new THREE.BoxGeometry(36, 55, 36), 27.5); break;
+    case 'STA-007': add(new THREE.CylinderGeometry(11, 11, 70, 12), 35); break;
+    case 'STA-008': add(new THREE.BoxGeometry(60, 14, 30), 7); break;
+  }
+  g.userData.platzhalter = true;
+  return g;
+}
+
+const info = document.getElementById('info');
+const plan = await (await fetch('/stadtplan')).json();
+const fertig = new Set(((await (await fetch('/stadt/module')).json()).module || []).map((m) => m.id));
+const ids = [...new Set(plan.aussenmodule.map((m) => m.modul))].sort();
+const vorlagen = {};
+for (const id of ids) {
+  if (fertig.has(id)) {
+    try {
+      const root = (await import(`/stadt/module/${id}.js?v=${Date.now()}`)).create({});
+      root.traverse((o) => {
+        if (/^COL_/.test(o.name)) { o.visible = false; return; }
+        if (o.isMesh) { const ms = [].concat(o.material).map((x) => (x && /^KIT_/.test(x.name) ? kit(x.name) : x)); o.material = Array.isArray(o.material) ? ms : ms[0]; }
+      });
+      vorlagen[id] = root; continue;
+    } catch (e) { console.error(id, e); }
+  }
+  vorlagen[id] = placeholder(id);
+}
+// Instanzen nach Stadtplan; Module und Platzhalter getrennt bündeln (Platzhalter abschaltbar)
+const echt = new THREE.Group(), platz = new THREE.Group();
+scene.add(echt, platz);
+for (const m of plan.aussenmodule) {
+  const v = vorlagen[m.modul];
+  const o = v.clone(true);
+  o.position.fromArray(m.pos); o.rotation.y = m.rotY; o.scale.fromArray(m.skala || [1, 1, 1]);
+  (v.userData.platzhalter ? platz : echt).add(o);
+}
+const bEcht = batchGroup(echt, { renderer, scene, camera });
+const bPlatz = batchGroup(platz, { renderer, scene, camera });
+
+// Außenhülle aus der STL-Vorlage (data/stadt/aussen, aufbereitet von build/tools/stadt_stl.py)
+const vorlage = new THREE.Group(); scene.add(vorlage);
+const vorlageMat = new THREE.MeshStandardMaterial({ vertexColors: true, flatShading: true, metalness: 0.3, roughness: 0.55 });
+// Fensterbänder: an senkrechten Flächen alle 4 m ein dunkles Glasband (im Shader, kostet keine Geometrie)
+vorlageMat.onBeforeCompile = (sh) => {
+  sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWPos;')
+    .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+  sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWPos;')
+    .replace('#include <color_fragment>', `#include <color_fragment>
+      vec3 fn = normalize(cross(dFdx(vWPos), dFdy(vWPos)));
+      float senk = 1.0 - smoothstep(0.25, 0.45, abs(fn.y));
+      float band = step(0.84, fract(vWPos.y / 4.0)) * step(8.0, vWPos.y);
+      diffuseColor.rgb = mix(diffuseColor.rgb * 0.82, vec3(0.20, 0.30, 0.42), senk * band * 0.6);`);
+};
+let vorlageInfo = '';
+try {
+  const meta = await (await fetch('/stadt/aussen/meta.json')).json();
+  const lod = innerWidth * devicePixelRatio > 2200 ? 'nah' : 'nah';
+  const gltf = await new GLTFLoader().loadAsync('/stadt/aussen/' + meta.lods[lod].datei);
+  gltf.scene.traverse((o) => { if (o.isMesh) o.material = vorlageMat; });
+  vorlage.add(gltf.scene);
+  vorlageInfo = `Vorlage: ${meta.lods[lod].dreiecke.toLocaleString('de-DE')} Dreiecke`;
+} catch (e) { console.error(e); vorlageInfo = 'Vorlage nicht verfügbar'; }
+const setHuelle = (v) => {
+  vorlage.visible = v === 'vorlage';
+  bEcht.batches.forEach((b) => (b.visible = v === 'module'));
+  bPlatz.batches.forEach((b) => (b.visible = v === 'module' && document.getElementById('platzhalter').checked));
+};
+const huelleSel = document.getElementById('huelle');
+if (Q.get('huelle')) huelleSel.value = Q.get('huelle');
+huelleSel.onchange = () => setHuelle(huelleSel.value);
+setHuelle(huelleSel.value);
+
+// Räume als anklickbare Kästen (Grundriss + Höhe aus dem Stadtplan), Korridore als Bänder
+const raumGruppe = new THREE.Group(); raumGruppe.visible = false; scene.add(raumGruppe);
+const raumMat = new THREE.MeshBasicMaterial({ color: 0xffb060, transparent: true, opacity: 0.45, depthWrite: false });
+const korrMat = new THREE.MeshBasicMaterial({ color: 0x4da3ff, transparent: true, opacity: 0.5, depthWrite: false });
+const prism = (pts, y0, y1, mat) => {
+  const s = new THREE.Shape(pts.map(([x, z]) => new THREE.Vector2(x, -z)));
+  const g = new THREE.ExtrudeGeometry(s, { depth: y1 - y0, bevelEnabled: false }); g.rotateX(-Math.PI / 2); g.translate(0, y0, 0);
+  return new THREE.Mesh(g, mat);
+};
+for (const r of plan.raeume) { const m = prism(r.grundriss, r.hoehe[0], r.hoehe[1], raumMat); m.userData.raum = r; raumGruppe.add(m); }
+for (const k of plan.korridore) raumGruppe.add(prism(k.grundriss, k.pos[1], k.pos[1] + 4.7, korrMat));
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+canvas.addEventListener('dblclick', (e) => {
+  if (!raumGruppe.visible) return;
+  ptr.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObjects(raumGruppe.children).find((h) => h.object.userData.raum);
+  if (hit) location.href = '/ui/#raum/' + hit.object.userData.raum.id;
+});
+
+// Bedienung
+const setHell = (n) => { renderer.toneMappingExposure = 0.4 + 0.1 * n; try { localStorage.setItem('sga-stadt-hell', n); } catch (e) {} };
+const hell = document.getElementById('hell');
+try { hell.value = localStorage.getItem('sga-stadt-hell') || 6; } catch (e) {}
+setHell(+hell.value); hell.oninput = () => setHell(+hell.value);
+document.getElementById('raeume').onchange = (e) => { raumGruppe.visible = e.target.checked; };
+if (Q.get('raeume') === '1') { document.getElementById('raeume').checked = true; raumGruppe.visible = true; }
+document.getElementById('platzhalter').onchange = () => setHuelle(huelleSel.value);
+
+const nFertig = ids.filter((i) => fertig.has(i)).length;
+let frames = 0, t0 = performance.now(), fps = 0;
+renderer.info.autoReset = false;
+function loop() {
+  requestAnimationFrame(loop);
+  controls.update();
+  water.material.normalMap.offset.x += 0.00004; water.material.normalMap.offset.y += 0.00003;
+  renderer.info.reset();
+  renderer.render(scene, camera);
+  frames++;
+  const now = performance.now();
+  if (now - t0 > 1000) {
+    fps = Math.round(frames * 1000 / (now - t0)); frames = 0; t0 = now;
+    info.textContent = `${huelleSel.value === 'vorlage' ? vorlageInfo : `Module fertig: ${nFertig} von ${ids.length}`}\n${plan.aussenmodule.length} Außenmodule · ${plan.raeume.length} Räume · Ø ${plan.durchmesser} m\n` +
+      `${fps} fps · ${renderer.info.render.calls} Draw Calls\nMaus: ziehen = drehen, rechts = verschieben, Rad = Zoom · Doppelklick auf Raumkasten öffnet den Raum`;
+  }
+}
+loop();
+</script>
+</body></html>

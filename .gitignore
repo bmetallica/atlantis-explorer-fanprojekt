@@ -1,0 +1,23 @@
+# Geheimnisse – niemals einchecken
+**/secrets/
+*.key
+*.env
+.env*
+
+# Serienbilder und Rohvorlagen
+assets/images/*
+!assets/images/.gitkeep
+material/
+
+# Laufzeit, Caches, Zwischenstände
+__pycache__/
+*.pyc
+node_modules/
+build/tools/pyenv/
+build/auftraege*/
+build/stadt_stl/
+build/jumper_stl/
+build/orchestrator/*.log
+build/orchestrator/queue*.txt
+data/backups/
+*.log

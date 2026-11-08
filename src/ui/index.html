@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stargate Atlantis — Raumdatenbank</title>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+<style>
+  :root {
+    --bg: #0b1017;
+    --bg-2: #10171f;
+    --panel: #141c26;
+    --panel-2: #1a2430;
+    --border: #24313f;
+    --text: #e6edf3;
+    --muted: #8b98a5;
+    --accent: #4da3ff;
+    --accent-2: #2f7fd6;
+    --a: #3fb96f;   /* A = BELEGT */
+    --b: #4da3ff;   /* B = REKONSTRUIERT */
+    --c: #e0a63a;   /* C = ERGÄNZT */
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(11,16,23,.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto; padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .logo {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #cfe4ff, #4da3ff 45%, #1b3a63 100%);
+    box-shadow: 0 0 0 2px #1b3a63, 0 0 14px rgba(77,163,255,.5);
+    flex: 0 0 auto;
+  }
+  .brand h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: .2px; }
+  .brand .sub { font-size: 12px; color: var(--muted); margin: 0; }
+  .spacer { flex: 1; }
+  .meta-pill {
+    font-size: 12px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 4px 10px; white-space: nowrap;
+  }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 22px 20px 60px; }
+
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .search {
+    flex: 1 1 260px; min-width: 220px;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text);
+    padding: 10px 14px; font-size: 14px; outline: none;
+  }
+  .search:focus { border-color: var(--accent); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    cursor: pointer; user-select: none;
+    border: 1px solid var(--border); background: var(--panel);
+    color: var(--muted); border-radius: 999px; padding: 7px 13px; font-size: 13px;
+    transition: all .15s ease;
+  }
+  .chip:hover { color: var(--text); border-color: var(--accent); }
+  .chip.active { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+
+  .count-line { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+
+  /* Kopfzeilen-Tabs (Räume / Objekte) */
+  .tabs { display: flex; gap: 6px; }
+  .tab {
+    cursor: pointer; user-select: none;
+    border: 1px solid var(--border); background: var(--panel);
+    color: var(--muted); border-radius: 8px; padding: 7px 14px; font-size: 13px; font-weight: 600;
+    transition: all .15s ease;
+  }
+  .tab:hover { color: var(--text); border-color: var(--accent); }
+  .tab.active { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+
+  /* Objekte-Übersicht */
+  .obj-rooms { display: flex; gap: 8px; flex-wrap: wrap; margin: 6px 0 18px; }
+  .room-link {
+    font-size: 13px; color: var(--text);
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px; font-family: ui-monospace, SFMono, Menlo, monospace;
+  }
+  .room-link:hover { border-color: var(--accent); }
+  .room-link .rl-name { color: var(--muted); font-family: inherit; }
+
+  .grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px; cursor: pointer;
+    transition: border-color .15s ease, transform .15s ease;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: center; gap: 10px; }
+  .card .id { font-size: 12px; color: var(--muted); font-family: ui-monospace, SFMono, Menlo, monospace; }
+  .card h3 { margin: 0; font-size: 15px; font-weight: 650; }
+  .card .desc { font-size: 13px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .card .foot { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+  .tag { font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; }
+  .img-count { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .4px;
+    border-radius: 6px; padding: 3px 8px;
+  }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .badge.a { color: var(--a); } .badge.a .dot { background: var(--a); }
+  .badge.b { color: var(--b); } .badge.b .dot { background: var(--b); }
+  .badge.c { color: var(--c); } .badge.c .dot { background: var(--c); }
+
+  /* Detailansicht */
+  /* Stadtplan */
+  .sp-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 4px 0 12px; }
+  .sp-bar button { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; cursor: pointer; font: inherit; font-size: 13px; }
+  .sp-bar button.active { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+  .sp-bar label { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+  .sp-map { width: 100%; aspect-ratio: 1 / 1; max-height: 78vh; background: #0e1e30; border: 1px solid var(--border); border-radius: 8px; display: block; }
+  .sp-map .zone { fill: #3b4756; }
+  .sp-map .insel { fill: #46525f; }
+  .sp-map .turm { fill: #5d6b7a; }
+  .sp-map .korr { fill: #4da3ff; opacity: .55; }
+  .sp-map .raum { fill: rgba(235,190,120,.18); stroke: #ebbe78; cursor: pointer; }
+  .sp-map .raum:hover { fill: rgba(235,190,120,.55); }
+  .sp-map .raum.dim { opacity: .25; }
+  .sp-map .tr { fill: #78ffa0; }
+  .sp-map text { fill: #f5e6c8; font-size: 11px; pointer-events: none; text-anchor: middle; dominant-baseline: middle; }
+  .sp-map text.zl { fill: #b8c7d6; font-size: 15px; }
+  .sp-info { color: var(--muted); font-size: 13px; margin: 8px 0 16px; }
+  .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .sp-table th, .sp-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .sp-table th { color: var(--muted); font-weight: 600; }
+  .sp-table tr:hover td { background: var(--panel-2); }
+  .detail { display: none; }
+  .detail.active { display: block; }
+  .back {
+    cursor: pointer; background: none; border: 1px solid var(--border);
+    color: var(--muted); border-radius: 8px; padding: 7px 12px; font-size: 13px;
+    margin-bottom: 18px;
+  }
+  .back:hover { color: var(--text); border-color: var(--accent); }
+  .detail .head { display: flex; align-items: flex-start; gap: 14px; flex-wrap: wrap; }
+  .detail h2 { margin: 0; font-size: 24px; font-weight: 700; }
+  .detail .en { color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .kv {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px; margin: 16px 0 6px;
+  }
+  .kv .item {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  .kv .k { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .kv .v { font-size: 14px; margin-top: 3px; }
+  .summary {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; margin: 14px 0;
+    font-size: 14.5px; line-height: 1.7;
+  }
+  .eps { display: flex; gap: 8px; flex-wrap: wrap; margin: 4px 0 18px; }
+  .ep { font-size: 12px; color: var(--text); background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; padding: 4px 11px; }
+  h4.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin: 22px 0 10px; }
+
+  /* Unterkategorien */
+  .subcats { display: flex; flex-direction: column; gap: 12px; margin: 14px 0; }
+  .subcat {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .subcat .label { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); margin-bottom: 5px; font-weight: 700; }
+  .subcat .value { font-size: 14px; line-height: 1.6; }
+  .subcat .list { list-style: none; padding: 0; margin: 0; }
+  .subcat .list li { font-size: 13.5px; padding: 3px 0; border-bottom: 1px solid var(--border); }
+  .subcat .list li:last-child { border-bottom: none; }
+
+  /* Objekte-Karten */
+  .obj-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); margin: 14px 0; }
+  .obj-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .obj-card .obj-name { font-size: 15px; font-weight: 650; color: var(--text); }
+  .obj-card .obj-row { font-size: 13px; line-height: 1.55; }
+  .obj-card .obj-row .k { color: var(--accent); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; margin-right: 6px; }
+  .obj-card .obj-row .v { color: var(--text); }
+
+  .img-grid {
+    display: grid; gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+  .img-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: relative; }
+  .img-card img { width: 100%; height: 190px; object-fit: cover; display: block; background: #000; cursor: zoom-in; }
+  .del-btn {
+    position: absolute; top: 8px; right: 8px; z-index: 2;
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1px solid var(--border); background: rgba(11,16,23,.85);
+    color: var(--muted); font-size: 15px; line-height: 1;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: all .15s ease;
+  }
+  .del-btn:hover { color: #ff6b6b; border-color: #ff6b6b; background: rgba(11,16,23,.95); }
+  .img-card .cap { padding: 10px 12px; font-size: 12.5px; color: var(--muted); }
+  .img-card .cap b { color: var(--text); font-weight: 600; }
+  .no-img { color: var(--muted); font-size: 14px; }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(0,0,0,.85); display: none;
+    align-items: center; justify-content: center; cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 92vw; max-height: 92vh; object-fit: contain; border-radius: 8px; box-shadow: 0 10px 60px rgba(0,0,0,.6); }
+
+  .footer { max-width: 1200px; margin: 0 auto; padding: 20px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--border); display: flex; gap: 14px; flex-wrap: wrap; }
+  .loading { color: var(--muted); text-align: center; padding: 60px 0; font-size: 15px; }
+
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .detail h2 { font-size: 20px; }
+  }
+
+  /* 3D-Objekt-Viewer */
+  .mv { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 14px; }
+  @media (max-width: 860px) { .mv { grid-template-columns: 1fr; } }
+  .mv-stage { position: relative; height: 520px; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: #0b1017; }
+  @media (max-width: 860px) { .mv-stage { height: 380px; } }
+  .mv-stage canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+  .mv-hud { position: absolute; left: 12px; top: 10px; pointer-events: none; }
+  .mv-state { font-size: 12px; background: rgba(11,16,23,.75); border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px; color: #9fd8ff; }
+  .mv-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; padding: 20px; text-align: center; }
+  .mv-side { display: flex; flex-direction: column; gap: 10px; }
+  .mv-box { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; font-size: 13px; }
+  .mv-box label { display: block; color: var(--text); margin: 3px 0; cursor: pointer; }
+  .mv-box label.mv-range { display: flex; align-items: center; gap: 6px; cursor: default; }
+  .mv-box label.mv-range input { flex: 1; min-width: 0; }
+  .mv-box label.mv-range b { width: 1.4em; text-align: right; font-weight: 600; }
+  .mv-h { font-size: 11px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 6px; }
+  .mv-btns { display: flex; flex-direction: column; gap: 6px; }
+  .mv button, .mv-btn, .mv-upload { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 13px; cursor: pointer; text-align: left; }
+  .mv button:hover, .mv-btn:hover, .mv-upload:hover { border-color: var(--accent); text-decoration: none; }
+  .mv button:disabled { opacity: .5; cursor: default; }
+  .mv-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .mv-infobody div { margin: 2px 0; color: var(--text); }
+  .mv-infobody .k { color: var(--muted); }
+  .mv-infobody details { margin-top: 6px; }
+  .mv-none { color: var(--muted); }
+  .einbau { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 14px; }
+  .einbau p { margin: 4px 0; } .einbau ul { margin: 4px 0 8px; padding-left: 20px; }
+  .einbau .md-h { font-weight: 700; margin: 10px 0 4px; color: var(--accent); }
+  .einbau code { background: var(--bg-2); border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-size: 12.5px; }
+  .einbau pre { background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; overflow-x: auto; margin: 8px 0; }
+  .einbau pre code { background: none; border: 0; padding: 0; white-space: pre; }
+  .einbau-form textarea { width: 100%; min-height: 320px; background: var(--bg-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font: 12.5px ui-monospace, Menlo, Consolas, monospace; }
+  .einbau-form button, .einbau-edit { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  .einbau-edit { margin-left: 8px; text-transform: none; letter-spacing: 0; font-weight: 400; vertical-align: middle; }
+  .tag.t3d { color: #9fd8ff; border-color: #2f7fd6; }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo"></div>
+      <div>
+        <h1>Stargate Atlantis — Raumdatenbank</h1>
+        <p class="sub" id="brand-sub">Lade …</p>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <div class="tab active" data-view="raeume">Räume</div>
+      <div class="tab" data-view="objekte">Objekte</div>
+      <div class="tab" data-view="stadtplan">Stadtplan</div>
+    </nav>
+    <div class="spacer"></div>
+    <span class="meta-pill" id="pill-count"></span>
+    <span class="meta-pill" id="pill-version"></span>
+  </div>
+</header>
+
+<main>
+  <!-- Listenansicht -->
+  <section id="list-view">
+    <div class="toolbar">
+      <input class="search" id="search" type="search" placeholder="Suche: Name, Beschreibung, ID …">
+      <div class="chips" id="chips"></div>
+    </div>
+    <p class="count-line" id="count-line"></p>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- Detailansicht -->
+  <section id="detail-view" class="detail">
+    <button class="back" id="back">← Zurück zur Liste</button>
+    <div id="detail-body"></div>
+  </section>
+
+  <!-- Objektliste -->
+  <section id="stadtplan-view" class="detail">
+    <div class="sp-bar" id="sp-bar"></div>
+    <svg class="sp-map" id="sp-map" xmlns="http://www.w3.org/2000/svg"></svg>
+    <p class="sp-info" id="sp-info"></p>
+    <h4 class="sec">Räume nach Zone und Trakt</h4>
+    <table class="sp-table" id="sp-table"></table>
+  </section>
+  <section id="object-list-view" class="detail">
+    <p class="count-line" id="obj-count-line"></p>
+    <div class="grid" id="obj-grid"></div>
+  </section>
+
+  <!-- Objekt-Detail -->
+  <section id="object-detail-view" class="detail">
+    <button class="back" id="back-obj">← Zurück zur Objektliste</button>
+    <div id="obj-detail-body"></div>
+  </section>
+
+  <div id="loading" class="loading">Lade Daten …</div>
+</main>
+
+<div class="footer" id="footer"></div>
+
+<div class="lightbox" id="lightbox"><img id="lightbox-img" alt=""></div>
+
+<script>
+const BASE = "";
+const $ = (sel, el=document) => el.querySelector(sel);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+let ROOMS = [], META = null, CATEGORIES = {}, OBJECTS = [];
+let catFilter = "alle", statusFilter = "alle", query = "";
+
+const CAT_LABELS = {
+  command: "Kommando", medical: "Medizin", science: "Wissenschaft",
+  living: "Leben", military: "Militär", technical: "Technik",
+  transport: "Transport", public: "Öffentlich"
+};
+
+function statusBadge(st) {
+  const label = (CATEGORIES[st] || st || "").split("—")[0].trim();
+  return `<span class="badge ${st.toLowerCase()}"><span class="dot"></span>${esc(label || st)}</span>`;
+}
+// Kleiner Markdown-Renderer für Einbau-Infos: ```Codeblöcke```, #### Überschriften, - Listen, **fett**, `code`
+function mdLite(src) {
+  const inline = (t) => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+  const parts = String(src).split(/```[a-z]*\n?/);
+  return parts.map((part, i) => {
+    if (i % 2) return `<pre><code>${esc(part.replace(/\n$/, ""))}</code></pre>`;
+    let html = "", list = false;
+    for (const line of part.split("\n")) {
+      const li = line.match(/^\s*[-*] (.*)$/), h = line.match(/^#{1,6} (.*)$/);
+      if (li) { if (!list) { html += "<ul>"; list = true; } html += `<li>${inline(li[1])}</li>`; continue; }
+      if (list) { html += "</ul>"; list = false; }
+      if (h) html += `<div class="md-h">${inline(h[1])}</div>`;
+      else if (line.trim()) html += `<p>${inline(line)}</p>`;
+    }
+    return html + (list ? "</ul>" : "");
+  }).join("");
+}
+function imgURL(file) { return BASE + "/images/" + encodeURIComponent(file); }
+
+function roomMatches(r) {
+  if (catFilter !== "alle" && r.category !== catFilter) return false;
+  if (statusFilter !== "alle" && r.status !== statusFilter) return false;
+  if (query) {
+    const q = query.toLowerCase();
+    const hay = [r.id, r.name_de, r.name_en, r.summary_de, (r.area||""), (r.episodes||[]).join(" ")].join(" ").toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function renderChips() {
+  const cats = Object.keys(CAT_LABELS);
+  const el = $("#chips");
+  el.innerHTML =
+    `<div class="chip ${catFilter==="alle"?"active":""}" data-cat="alle">Alle</div>` +
+    cats.map(c => `<div class="chip ${catFilter===c?"active":""}" data-cat="${c}">${CAT_LABELS[c]}</div>`).join("") +
+    `<span style="width:1px"></span>` +
+    `<div class="chip ${statusFilter==="alle"?"active":""}" data-status="alle">Alle A/B/C</div>` +
+    ["A","B","C"].map(s => `<div class="chip ${statusFilter===s?"active":""}" data-status="${s}">${s}</div>`).join("");
+  el.querySelectorAll("[data-cat]").forEach(c => c.onclick = () => { catFilter = c.dataset.cat; render(); });
+  el.querySelectorAll("[data-status]").forEach(c => c.onclick = () => { statusFilter = c.dataset.status; render(); });
+}
+
+function render() {
+  const rooms = ROOMS.filter(roomMatches);
+  $("#count-line").textContent =
+    `${rooms.length} von ${ROOMS.length} Räumen` +
+    (query ? ` · Suche: „${query}“` : "");
+  const grid = $("#grid");
+  if (!rooms.length) {
+    grid.innerHTML = `<div class="no-img">Keine Räume gefunden.</div>`;
+    return;
+  }
+  grid.innerHTML = rooms.map(r => `
+    <div class="card" data-id="${esc(r.id)}">
+      <div class="top">
+        ${statusBadge(r.status)}
+        <span class="id">${esc(r.id)}</span>
+      </div>
+      <h3>${esc(r.name_de)}</h3>
+      <div class="desc">${esc(r.summary_de || "")}</div>
+      <div class="foot">
+        <span class="tag">${esc(CAT_LABELS[r.category] || r.category)}</span>
+        <span class="tag">E${esc(r.level)}</span>
+        ${ Object.keys(r.models||{}).length ? `<span class="tag t3d">3D</span>` : "" }
+        <span class="img-count">${(r.images||[]).length} Bild${(r.images||[]).length===1?"":"er"}</span>
+      </div>
+    </div>`).join("");
+  grid.querySelectorAll(".card").forEach(c => c.onclick = () => showDetail(c.dataset.id));
+}
+
+function setActiveTab(view) {
+  $("#tabs").querySelectorAll(".tab").forEach(t =>
+    t.classList.toggle("active", t.dataset.view === view));
+}
+
+function hideAllViews() {
+  $("#list-view").style.display = "none";
+  $("#detail-view").classList.remove("active");
+  $("#object-list-view").classList.remove("active");
+  $("#stadtplan-view").classList.remove("active");
+  $("#object-detail-view").classList.remove("active");
+  // laufenden 3D-Viewer beenden (WebGL-Kontext freigeben)
+  import("/ui/viewer.js").then(v => v.disposeViewer()).catch(() => {});
+}
+
+function showDetail(id) {
+  const r = ROOMS.find(x => x.id === id);
+  if (!r) return;
+  location.hash = "raum/" + id;
+  hideAllViews();
+  setActiveTab("raeume");
+  $("#detail-view").classList.add("active");
+  const imgs = r.images || [];
+  $("#detail-body").innerHTML = `
+    <div class="head">
+      <div>
+        <h2>${esc(r.name_de)}</h2>
+        <div class="en">${esc(r.name_en)} · ${esc(r.id)}</div>
+      </div>
+      ${statusBadge(r.status)}
+    </div>
+    <div class="kv">
+      <div class="item"><div class="k">Kategorie</div><div class="v">${esc(CAT_LABELS[r.category] || r.category)}</div></div>
+      <div class="item"><div class="k">Etage</div><div class="v">${esc(r.level)}</div></div>
+      <div class="item"><div class="k">Bereich</div><div class="v">${esc(r.area || "—")}</div></div>
+      <div class="item"><div class="k">Quellenklasse</div><div class="v">${esc((CATEGORIES[r.status]||r.status||"").split("—")[0].trim())}</div></div>
+    </div>
+    <div class="summary">${esc(r.summary_de || "Keine Beschreibung.")}</div>
+    ${ (r.episodes||[]).length ? `<h4 class="sec">Episoden</h4><div class="eps">${r.episodes.map(e=>`<span class="ep">${esc(e)}</span>`).join("")}</div>` : "" }
+    <h4 class="sec">Raumdetails</h4>
+    <div class="subcats">
+      ${ r.groesse ? `<div class="subcat"><div class="label">Größe</div><div class="value">${esc(r.groesse)}</div></div>` : "" }
+      ${ r.raum_geometrie ? `<div class="subcat"><div class="label">Raumgeometrie</div><div class="value">${esc(r.raum_geometrie)}</div></div>` : "" }
+      ${ (r.mobiliar||[]).length ? `<div class="subcat"><div class="label">Mobiliar</div><ul class="list">${r.mobiliar.map(m=>`<li>${esc(m)}</li>`).join("")}</ul></div>` : "" }
+      ${ (r.objekte||[]).length ? `<div class="subcat"><div class="label">Objekte</div><ul class="list">${r.objekte.map(o=>`<li><a href="#objekt/${esc(o)}">${esc(o)}</a></li>`).join("")}</ul></div>` : "" }
+    </div>
+    ${ (r.objekte_detail||[]).length ? `<h4 class="sec">Objekte im Detail</h4><div class="obj-grid">${r.objekte_detail.map(o=>`
+      <div class="obj-card" onclick="location.hash='objekt/${esc(o.id)}'" style="cursor:pointer">
+        <div class="obj-name">${esc(o.name_de)} <span style="color:var(--muted);font-weight:400;font-size:12px">${esc(o.id)}</span></div>
+        <div class="obj-row"><span class="k">Beschaffenheit</span><span class="v">${esc(o.beschaffenheit || "—")}</span></div>
+        <div class="obj-row"><span class="k">Aussehen</span><span class="v">${esc(o.ausssehen || "—")}</span></div>
+        <div class="obj-row"><span class="k">Funktion</span><span class="v">${esc(o.funktion || "—")}</span></div>
+      </div>`).join("")}</div>` : "" }
+    <h4 class="sec">Lage in der Stadt</h4>
+    <div id="lage-view" class="sp-info">Lade …</div>
+    <h4 class="sec">Einbau ins Spiel <button class="einbau-edit" id="einbau-edit">bearbeiten</button></h4>
+    <div class="einbau" id="einbau-view">${r.einbau ? mdLite(r.einbau) : '<div class="no-img">Noch keine Einbau-Informationen hinterlegt.</div>'}</div>
+    <div class="einbau-form" id="einbau-form" style="display:none">
+      <textarea id="einbau-text" spellcheck="false" placeholder="Datei, Anschlüsse, Platzierung der Objekte, Hinweise … (Markdown)">${esc(r.einbau || "")}</textarea>
+      <div class="mv-row"><button id="einbau-save">Speichern</button><button id="einbau-cancel">Abbrechen</button></div>
+    </div>
+    <h4 class="sec">3D-Modell (Raum)</h4>
+    <div id="model-viewer"></div>
+    <h4 class="sec">Bilder (${imgs.length})</h4>
+    ${ imgs.length
+        ? `<div class="img-grid">${imgs.map((im,i)=>`
+             <div class="img-card">
+               <button class="del-btn" data-idx="${i}" title="Bild löschen" aria-label="Bild löschen">✕</button>
+               <img src="${imgURL(im.file)}" alt="${esc(im.caption||im.file)}" loading="lazy">
+               <div class="cap"><b>${esc(im.caption || im.file)}</b><br>${esc(im.source || "")}</div>
+             </div>`).join("")}</div>`
+        : `<div class="no-img">Keine Bilder vorhanden.</div>` }
+  `;
+  // Einbau-Informationen bearbeiten (PATCH /rooms/{id} mit Feld "einbau")
+  $("#einbau-edit").onclick = () => { $("#einbau-form").style.display = ""; $("#einbau-view").style.display = "none"; $("#einbau-text").focus(); };
+  $("#einbau-cancel").onclick = () => { $("#einbau-form").style.display = "none"; $("#einbau-view").style.display = ""; };
+  $("#einbau-save").onclick = async () => {
+    const res = await fetch(BASE + `/rooms/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ einbau: $("#einbau-text").value }) });
+    if (!res.ok) return alert("Speichern fehlgeschlagen: HTTP " + res.status);
+    r.einbau = $("#einbau-text").value;
+    showDetail(id);
+  };
+  // 3D-Viewer für den Raum; PLACE_OBJ-xxx-Punkte werden mit den fertigen Objekten bestückt
+  fetch(BASE + `/rooms/${id}`).then(x => x.json()).then(full => {
+    Object.assign(r, { models: full.models });
+    return import("/ui/viewer.js").then(v => v.mountViewer($("#model-viewer"), r, {
+      kind: "rooms", objects: OBJECTS,
+      onChanged: async () => {
+        const r2 = await fetch(BASE + `/rooms/${id}`).then(x => x.json());
+        Object.assign(r, r2);
+        showDetail(id);
+      }
+    }));
+  }).catch(e => { $("#model-viewer").innerHTML = `<div class="no-img">3D-Viewer konnte nicht geladen werden: ${esc(e.message)}</div>`; });
+  // Lightbox-Bindungen
+  $("#detail-body").querySelectorAll(".img-card img").forEach(im =>
+    im.onclick = () => { $("#lightbox-img").src = im.src; $("#lightbox").classList.add("open"); });
+  // Bild-Lösch-Buttons (falsch hochgeladene Bilder entfernen)
+  $("#detail-body").querySelectorAll(".del-btn").forEach(btn =>
+    btn.onclick = async ev => {
+      ev.stopPropagation();
+      const idx = +btn.dataset.idx;
+      const im = imgs[idx];
+      if (!im) return;
+      if (!confirm(`Bild „${im.caption || im.file}" aus Raum ${id} löschen?`)) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch(BASE + `/rooms/${id}/images/${idx}`, { method: "DELETE" });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || ("HTTP " + res.status));
+        // Raum aktualisieren und neu rendern
+        const r2 = await fetch(BASE + `/rooms/${id}`).then(r => r.json());
+        const room = ROOMS.find(x => x.id === id);
+        if (room) Object.assign(room, r2);
+        showDetail(id);
+      } catch (e) {
+        alert("Fehler beim Löschen: " + e.message);
+        btn.disabled = false;
+      }
+    });
+  renderLage(id);
+  window.scrollTo(0, 0);
+}
+
+function showList() {
+  history.replaceState(null, "", location.pathname + location.search);
+  hideAllViews();
+  setActiveTab("raeume");
+  $("#list-view").style.display = "";
+  render();
+}
+
+function showObjectList() {
+  location.hash = "objekte";
+  hideAllViews();
+  setActiveTab("objekte");
+  $("#object-list-view").classList.add("active");
+  $("#obj-count-line").textContent = OBJECTS.length + " Objekte in der Datenbank";
+  const grid = $("#obj-grid");
+  grid.innerHTML = OBJECTS.map(o => `
+    <div class="card" data-id="${esc(o.id)}">
+      <div class="top">
+        <span class="id">${esc(o.id)}</span>
+      </div>
+      <h3>${esc(o.name_de)}</h3>
+      <div class="desc">${esc(o.funktion || o.ausssehen || o.beschaffenheit || "—")}</div>
+      <div class="foot">
+        <span class="tag">${(o.rooms||[]).length} Raum${(o.rooms||[]).length===1?"":"er"}</span>
+        ${ Object.keys(o.models||{}).length ? `<span class="tag t3d">3D</span>` : "" }
+        <span class="img-count">${(o.images||[]).length} Bild${(o.images||[]).length===1?"":"er"}</span>
+      </div>
+    </div>`).join("");
+  grid.querySelectorAll(".card").forEach(c => c.onclick = () => showObjectDetail(c.dataset.id));
+  window.scrollTo(0, 0);
+}
+
+function showObjectDetail(id) {
+  const o = OBJECTS.find(x => x.id === id);
+  if (!o) return;
+  location.hash = "objekt/" + id;
+  hideAllViews();
+  setActiveTab("objekte");
+  $("#object-detail-view").classList.add("active");
+  const rooms = o.rooms || [];
+  const imgs = o.images || [];
+  $("#obj-detail-body").innerHTML = `
+    <div class="head">
+      <div>
+        <h2>${esc(o.name_de)}</h2>
+        <div class="en">${esc(o.name_en || "")} · ${esc(o.id)}</div>
+      </div>
+    </div>
+    <h4 class="sec">Objektdaten</h4>
+    <div class="subcats">
+      <div class="subcat"><div class="label">Beschaffenheit</div><div class="value">${esc(o.beschaffenheit || "—")}</div></div>
+      <div class="subcat"><div class="label">Aussehen</div><div class="value">${esc(o.ausssehen || "—")}</div></div>
+      <div class="subcat"><div class="label">Funktion</div><div class="value">${esc(o.funktion || "—")}</div></div>
+    </div>
+    <h4 class="sec">Einbau ins Spiel <button class="einbau-edit" id="einbau-edit">bearbeiten</button></h4>
+    <div class="einbau" id="einbau-view">${o.einbau ? mdLite(o.einbau) : '<div class="no-img">Noch keine Einbau-Informationen hinterlegt.</div>'}</div>
+    <div class="einbau-form" id="einbau-form" style="display:none">
+      <textarea id="einbau-text" spellcheck="false" placeholder="Datei, Platzierung, b.prop()-Aufruf, Aktionen, Hinweise … (Markdown: Codeblöcke mit drei Backticks, - Listen, **fett**, Inline-Code in Backticks)">${esc(o.einbau || "")}</textarea>
+      <div class="mv-row"><button id="einbau-save">Speichern</button><button id="einbau-cancel">Abbrechen</button></div>
+    </div>
+    ${ rooms.length
+        ? `<h4 class="sec">Vorkommen in Räumen (${rooms.length})</h4>
+           <div class="obj-rooms">${rooms.map(rid => {
+              const r = ROOMS.find(x => x.id === rid);
+              return `<a class="room-link" href="#raum/${esc(rid)}">${esc(rid)}<span class="rl-name"> — ${esc(r ? r.name_de : "?")}</span></a>`;
+            }).join("")}</div>`
+        : `<h4 class="sec">Vorkommen</h4><div class="no-img">Keine Räume referenzieren dieses Objekt.</div>` }
+    <h4 class="sec">3D-Modell (Spielobjekt)</h4>
+    <div id="model-viewer"></div>
+    <h4 class="sec">Bilder (${imgs.length})</h4>
+    ${ imgs.length
+        ? `<div class="img-grid">${imgs.map((im,i)=>`
+             <div class="img-card">
+               <button class="del-btn" data-idx="${i}" title="Bild löschen" aria-label="Bild löschen">✕</button>
+               <img src="${imgURL(im.file)}" alt="${esc(im.caption||im.file)}" loading="lazy">
+               <div class="cap"><b>${esc(im.caption || im.file)}</b><br>${esc(im.source || "")}</div>
+             </div>`).join("")}</div>`
+        : `<div class="no-img">Keine Bilder vorhanden.</div>` }
+  `;
+  // Einbau-Informationen bearbeiten (PATCH /objects/{id} mit Feld "einbau")
+  $("#einbau-edit").onclick = () => { $("#einbau-form").style.display = ""; $("#einbau-view").style.display = "none"; $("#einbau-text").focus(); };
+  $("#einbau-cancel").onclick = () => { $("#einbau-form").style.display = "none"; $("#einbau-view").style.display = ""; };
+  $("#einbau-save").onclick = async () => {
+    const res = await fetch(BASE + `/objects/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ einbau: $("#einbau-text").value }) });
+    if (!res.ok) return alert("Speichern fehlgeschlagen: HTTP " + res.status);
+    const obj = OBJECTS.find(x => x.id === id);
+    if (obj) obj.einbau = $("#einbau-text").value;
+    showObjectDetail(id);
+  };
+  // 3D-Viewer (ES-Modul, lädt three.js erst bei Bedarf)
+  import("/ui/viewer.js").then(v => v.mountViewer($("#model-viewer"), o, {
+    onChanged: async () => {
+      const o2 = await fetch(BASE + `/objects/${id}`).then(r => r.json());
+      const obj = OBJECTS.find(x => x.id === id);
+      if (obj) Object.assign(obj, o2);
+      showObjectDetail(id);
+    }
+  })).catch(e => { $("#model-viewer").innerHTML = `<div class="no-img">3D-Viewer konnte nicht geladen werden: ${esc(e.message)}</div>`; });
+  // Lightbox-Bindungen
+  $("#obj-detail-body").querySelectorAll(".img-card img").forEach(im =>
+    im.onclick = () => { $("#lightbox-img").src = im.src; $("#lightbox").classList.add("open"); });
+  // Bild-Lösch-Buttons (falsch hochgeladene Bilder entfernen)
+  $("#obj-detail-body").querySelectorAll(".del-btn").forEach(btn =>
+    btn.onclick = async ev => {
+      ev.stopPropagation();
+      const idx = +btn.dataset.idx;
+      const im = imgs[idx];
+      if (!im) return;
+      if (!confirm(`Bild „${im.caption || im.file}" aus Objekt ${id} löschen?`)) return;
+      btn.disabled = true;
+      try {
+        const res = await fetch(BASE + `/objects/${id}/images/${idx}`, { method: "DELETE" });
+        if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || ("HTTP " + res.status));
+        // Objekt aktualisieren und neu rendern
+        const o2 = await fetch(BASE + `/objects/${id}`).then(r => r.json());
+        const obj = OBJECTS.find(x => x.id === id);
+        if (obj) Object.assign(obj, o2);
+        showObjectDetail(id);
+      } catch (e) {
+        alert("Fehler beim Löschen: " + e.message);
+        btn.disabled = false;
+      }
+    });
+  window.scrollTo(0, 0);
+}
+
+// ---------------------------------------------------------------- Stadtplan
+let PLAN = null;
+const SP_VIEWS = {
+  gesamt: { label: "Ganze Stadt", c: [0, 0], h: 700 },
+  zentrum: { label: "Innenstadt", c: [-60, 0], h: 200 },
+  turm: { label: "Kontrollturm", c: [-15, -3], h: 45 },
+  ostpier: { label: "Ostpier", c: [270, -50], h: 60 },
+  westpier: { label: "Westpier", c: [-480, -96], h: 50 },
+  suedpier: { label: "Südpier", c: [96, 250], h: 60 },
+  suedwestpier: { label: "Südwestpier", c: [-440, 350], h: 50 },
+};
+async function loadPlan() {
+  if (!PLAN) PLAN = await fetch(BASE + "/stadtplan").then(r => { if (!r.ok) throw new Error("Stadtplan fehlt"); return r.json(); });
+  return PLAN;
+}
+const compass = (deg) => [Math.sin(deg * Math.PI / 180), -Math.cos(deg * Math.PI / 180)];
+async function showStadtplan(view = "gesamt", markId = null) {
+  // Hash setzen löst route() aus – Markierung bis dahin merken
+  if (location.hash !== "#stadtplan/" + view) { window.SP_MARK = markId; location.hash = "stadtplan/" + view; return; }
+  markId = markId ?? window.SP_MARK; window.SP_MARK = null;
+  hideAllViews();
+  setActiveTab("stadtplan");
+  $("#stadtplan-view").classList.add("active");
+  window.scrollTo(0, 0);
+  let plan;
+  try { plan = await loadPlan(); } catch (e) { $("#sp-info").textContent = e.message; return; }
+  const v = SP_VIEWS[view] || SP_VIEWS.gesamt;
+  const ebenen = [...new Set(plan.raeume.map(r => r.ebene))].sort((a, b) => a - b);
+  const sel = window.SP_EBENE ?? "alle";
+  $("#sp-bar").innerHTML = Object.entries(SP_VIEWS).map(([k, x]) => `<button data-v="${k}" class="${k === view ? "active" : ""}">${esc(x.label)}</button>`).join("") +
+    `<label>Ebene <select id="sp-ebene"><option value="alle">alle</option>${ebenen.map(e => `<option value="${e}" ${String(e) === String(sel) ? "selected" : ""}>E${e}</option>`).join("")}</select></label>` +
+    `<a href="${BASE}/ui/stadt" style="margin-left:auto;font-size:13px">3D-Ansicht der Stadt</a> <a href="${BASE}/stadtplan" target="_blank" rel="noopener" style="font-size:13px">JSON</a>`;
+  $("#sp-bar").querySelectorAll("button").forEach(b => b.onclick = () => showStadtplan(b.dataset.v));
+  $("#sp-ebene").onchange = (e) => { window.SP_EBENE = e.target.value; showStadtplan(view); };
+  const [cx, cz] = v.c, h = v.h;
+  const svg = $("#sp-map");
+  svg.setAttribute("viewBox", `${cx - h} ${cz - h} ${2 * h} ${2 * h}`);
+  const k = h / 300;                 // Schrift-/Linienskala
+  const poly = (pts) => pts.map(p => p.join(",")).join(" ");
+  // Hintergrund: Höhenbild der Stadt-Vorlage (hell = hoch), deckt −700 … 700 m ab
+  let out = `<image href="${BASE}/stadtplan/karte/hoehen" x="-700" y="-700" width="1400" height="1400" preserveAspectRatio="none"/>`;
+  for (const z of plan.zonen) {
+    if (z.art !== "pier" || h <= 200) continue;
+    const [dx, dz] = compass(z.winkel);
+    out += `<text class="zl" x="${dx * (z.r_aussen - 70)}" y="${dz * (z.r_aussen - 70)}" style="font-size:${15 * k * 1.6}px">${esc(z.name)}</text>`;
+  }
+  const on = (e) => sel === "alle" || String(e) === String(sel);
+  for (const kk of plan.korridore) if (on(plan.raeume.find(r => r.trakt === kk.trakt)?.ebene)) out += `<polygon class="korr" points="${poly(kk.grundriss)}"/>`;
+  const rs = [...plan.raeume].sort((a, b) => a.hoehe[0] - b.hoehe[0]);
+  for (const r of rs) {
+    const c = r.grundriss.reduce((a, p) => [a[0] + p[0] / 4, a[1] + p[1] / 4], [0, 0]);
+    out += `<polygon class="raum ${on(r.ebene) ? "" : "dim"}" data-id="${r.id}" points="${poly(r.grundriss)}" style="stroke-width:${Math.max(.3, 1.2 * k)}${r.id === markId ? ";fill:rgba(77,163,255,.6)" : ""}"><title>${esc(r.id + " – " + r.name + " (Ebene " + r.ebene + ", " + r.trakt + ")")}</title></polygon>`;
+    if (h <= 160 && on(r.ebene)) out += `<text x="${c[0]}" y="${c[1]}" style="font-size:${Math.min(11 * k * 1.4, 4.2)}px">${r.id.slice(4)}</text>`;
+  }
+  for (const t of plan.transporter) out += `<circle class="tr" cx="${t.pos[0]}" cy="${t.pos[2]}" r="${Math.max(1.2, 3 * k)}"><title>Transporter ${esc(t.trakt)}</title></circle>`;
+  svg.innerHTML = out;
+  svg.querySelectorAll(".raum").forEach(p => p.onclick = () => { location.hash = "raum/" + p.dataset.id; });
+  $("#sp-info").innerHTML = `Ø ${plan.durchmesser} m · ${plan.raeume.length} Räume · ${plan.korridore.length} Korridorsegmente · ${plan.transporter.length} Transporter · Wasser y = ${plan.wasser_y} m, Deck y = ${plan.deck_y} m. ` +
+    `Norden oben. Raum anklicken öffnet ihn. Räume gelb, Korridore blau, Transporter grün.` +
+    ((plan.pruefung.raumueberschneidungen || []).length ? ` <b style="color:#ff8080">Überschneidungen: ${plan.pruefung.raumueberschneidungen.length}</b>` : " Keine Überschneidungen.");
+  const zn = Object.fromEntries(plan.zonen.map(z => [z.id, z.name]));
+  const rows = [...plan.raeume].sort((a, b) => (a.zone + a.trakt + a.id).localeCompare(b.zone + b.trakt + b.id));
+  $("#sp-table").innerHTML = `<tr><th>Raum</th><th>Name</th><th>Zone</th><th>Trakt</th><th>Ebene</th><th>Position (x, y, z)</th></tr>` +
+    rows.map(r => `<tr><td><a href="#raum/${esc(r.id)}">${esc(r.id)}</a></td><td>${esc(r.name)}</td><td>${esc(zn[r.zone] || r.zone)}</td><td>${esc(r.trakt)}</td><td>E${r.ebene}</td><td>${r.pos.map(x => x.toFixed(1)).join(", ")}</td></tr>`).join("");
+}
+async function renderLage(id) {
+  const el = $("#lage-view");
+  if (!el) return;
+  try {
+    const plan = await loadPlan();
+    const r = plan.raeume.find(x => x.id === id);
+    if (!r) { el.textContent = id === "ATL-049" ? "Korridor-Modul – wird im Stadtplan vielfach verwendet." : "Nicht im Stadtplan (Teil eines anderen Raums)."; return; }
+    const zone = plan.zonen.find(z => z.id === r.zone);
+    const verb = plan.verbindungen.filter(v => [v.a?.raum, v.b?.raum].includes(id));
+    const ziel = (v) => { const o = v.a?.raum === id ? v.b : v.a; return o.raum ? `<a href="#raum/${esc(o.raum)}">${esc(o.raum)}</a>` : o.korridor ? `Korridor ${esc(o.korridor)}` : esc(JSON.stringify(o)); };
+    const eigene = (v) => (v.a?.raum === id ? v.a : v.b).tuer;
+    const view = Object.keys(SP_VIEWS).includes(r.zone) ? r.zone : (r.zone === "turm" ? "turm" : "zentrum");
+    el.innerHTML = `<b>${esc(zone?.name || r.zone)}</b>, Trakt <code>${esc(r.trakt)}</code>, Ebene E${r.ebene} · Position ${r.pos.map(x => x.toFixed(1)).join(" / ")} m · Drehung ${(r.rotY * 180 / Math.PI).toFixed(0)}° · ` +
+      `<a href="#" id="lage-karte">auf der Karte zeigen</a>` +
+      (verb.length ? `<ul class="list">${verb.map(v => `<li><code>${esc(eigene(v))}</code> → ${ziel(v)}${v.durchgang_m ? ` (Durchgang ${v.durchgang_m} m)` : ""}${v.art === "luke" ? " (Luke)" : ""}</li>`).join("")}</ul>` : "");
+    $("#lage-karte").onclick = (e) => { e.preventDefault(); showStadtplan(view, id); };
+  } catch (e) { el.textContent = "Stadtplan nicht verfügbar."; }
+}
+
+function route() {
+  const h = location.hash;
+  const mr = h.match(/^#raum\/(.+)$/);
+  const mo = h.match(/^#objekt\/(.+)$/);
+  if (mr) showDetail(decodeURIComponent(mr[1]));
+  else if (mo) showObjectDetail(decodeURIComponent(mo[1]));
+  else if (h === "#objekte") showObjectList();
+  else if (h.startsWith("#stadtplan")) showStadtplan(decodeURIComponent(h.split("/")[1] || "gesamt"));
+  else showList();
+}
+
+async function init() {
+  const [meta, rooms, objects] = await Promise.all([
+    fetch(BASE + "/meta").then(r => r.json()),
+    fetch(BASE + "/rooms").then(r => r.json()),
+    fetch(BASE + "/objects").then(r => r.json())
+  ]);
+  META = meta; ROOMS = rooms.rooms; CATEGORIES = meta.categories || {};
+  OBJECTS = objects.objects || [];
+  $("#loading").remove();
+  $("#brand-sub").textContent = META.description || "";
+  $("#pill-version").textContent = "v" + META.version;
+  $("#pill-count").textContent = ROOMS.length + " Räume · " + OBJECTS.length + " Objekte";
+  $("#tabs").querySelectorAll(".tab").forEach(t =>
+    t.onclick = () => { location.hash = t.dataset.view === "raeume" ? "" : t.dataset.view; });
+  $("#footer").innerHTML =
+    `<span>Quellenklassen:</span>` +
+    Object.entries(CATEGORIES).map(([k,v]) =>
+      `<span class="badge ${k.toLowerCase()}"><span class="dot"></span>${esc(v.split("—")[0].trim())} = ${esc(k)}</span>`).join(" ") +
+    `<span style="margin-left:auto">REST-API: <a href="${BASE}/docs" target="_blank" rel="noopener">/docs</a> · <a href="${BASE}/health" target="_blank" rel="noopener">/health</a></span>`;
+  renderChips();
+  $("#search").addEventListener("input", e => { query = e.target.value.trim(); render(); });
+  window.addEventListener("hashchange", route);
+  route();
+}
+
+$("#back").onclick = () => showList();
+$("#back-obj").onclick = () => showObjectList();
+$("#lightbox").onclick = () => $("#lightbox").classList.remove("open");
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("#lightbox").classList.remove("open"); });
+
+init().catch(err => {
+  const l = $("#loading");
+  if (l) l.textContent = "Fehler beim Laden: " + err.message;
+});
+</script>
+</body>
+</html>

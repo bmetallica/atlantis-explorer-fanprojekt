@@ -1,0 +1,6636 @@
+{
+ "version": 1,
+ "beschreibung": "Stadtplan Atlantis: Lage aller Räume, Korridore (ATL-049), Transporter (OBJ-043), Verbindungen. Erzeugt von build/tools/stadtplan.py.",
+ "koordinaten": "x = Osten, z = Süden, y = oben, Meter; rotY wie three.js rotation.y; Kompass 0° = Norden",
+ "durchmesser": 1300,
+ "wasser_y": 0.0,
+ "deck_y": 6.0,
+ "turm_y": 337.0,
+ "ebenen_y": {
+  "0": -16,
+  "1": -10,
+  "2": -4,
+  "3": 2,
+  "4": 8,
+  "5": 14,
+  "6": 20
+ },
+ "zonen": [
+  {
+   "id": "turm",
+   "name": "Kontrollturm",
+   "art": "turm",
+   "winkel": null,
+   "r_innen": 0,
+   "r_aussen": 45,
+   "hoehe": 150
+  },
+  {
+   "id": "insel",
+   "name": "Zentrale Insel (Innenstadt)",
+   "art": "insel",
+   "winkel": null,
+   "r_innen": 0,
+   "r_aussen": 230
+  },
+  {
+   "id": "ostpier",
+   "name": "Ostpier",
+   "art": "pier",
+   "groesse": "gross",
+   "winkel": 90,
+   "r_innen": 200,
+   "r_aussen": 650,
+   "breite": 150
+  },
+  {
+   "id": "suedpier",
+   "name": "Südpier",
+   "art": "pier",
+   "groesse": "klein",
+   "winkel": 150,
+   "r_innen": 200,
+   "r_aussen": 480,
+   "breite": 95
+  },
+  {
+   "id": "suedwestpier",
+   "name": "Südwestpier",
+   "art": "pier",
+   "groesse": "gross",
+   "winkel": 210,
+   "r_innen": 200,
+   "r_aussen": 650,
+   "breite": 150
+  },
+  {
+   "id": "westpier",
+   "name": "Westpier",
+   "art": "pier",
+   "groesse": "klein",
+   "winkel": 270,
+   "r_innen": 200,
+   "r_aussen": 480,
+   "breite": 95
+  },
+  {
+   "id": "nordwestpier",
+   "name": "Nordwestpier",
+   "art": "pier",
+   "groesse": "gross",
+   "winkel": 330,
+   "r_innen": 200,
+   "r_aussen": 650,
+   "breite": 150
+  },
+  {
+   "id": "nordostpier",
+   "name": "Nordostpier",
+   "art": "pier",
+   "groesse": "klein",
+   "winkel": 30,
+   "r_innen": 200,
+   "r_aussen": 480,
+   "breite": 95
+  }
+ ],
+ "aussenmodule": [
+  {
+   "modul": "STA-002",
+   "name": "city_central_island",
+   "pos": [
+    0,
+    6.0,
+    0
+   ],
+   "rotY": 0,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-001",
+   "name": "city_control_tower",
+   "pos": [
+    0,
+    6.0,
+    0
+   ],
+   "rotY": 0,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-003",
+   "name": "city_pier_large",
+   "zone": "ostpier",
+   "pos": [
+    200.0,
+    6.0,
+    -0.0
+   ],
+   "rotY": 1.5708,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-004",
+   "name": "city_pier_small",
+   "zone": "suedpier",
+   "pos": [
+    100.0,
+    6.0,
+    173.21
+   ],
+   "rotY": 0.5236,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-003",
+   "name": "city_pier_large",
+   "zone": "suedwestpier",
+   "pos": [
+    -100.0,
+    6.0,
+    173.21
+   ],
+   "rotY": -0.5236,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-004",
+   "name": "city_pier_small",
+   "zone": "westpier",
+   "pos": [
+    -200.0,
+    6.0,
+    0.0
+   ],
+   "rotY": -1.5708,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-003",
+   "name": "city_pier_large",
+   "zone": "nordwestpier",
+   "pos": [
+    -100.0,
+    6.0,
+    -173.21
+   ],
+   "rotY": -2.61799,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-004",
+   "name": "city_pier_small",
+   "zone": "nordostpier",
+   "pos": [
+    100.0,
+    6.0,
+    -173.21
+   ],
+   "rotY": 2.61799,
+   "skala": [
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "modul": "STA-008",
+   "name": "city_block_low",
+   "trakt": "insel-medizin",
+   "pos": [
+    37.88,
+    6.0,
+    77.29
+   ],
+   "rotY": 2.0944,
+   "skala": [
+    0.596,
+    0.629,
+    1.272
+   ]
+  },
+  {
+   "modul": "STA-008",
+   "name": "city_block_low",
+   "trakt": "insel-oeffentlich",
+   "pos": [
+    -100.02,
+    6.0,
+    -5.89
+   ],
+   "rotY": -0.0,
+   "skala": [
+    1.067,
+    1.264,
+    1.333
+   ]
+  },
+  {
+   "modul": "STA-008",
+   "name": "city_block_low",
+   "trakt": "insel-wohnen",
+   "pos": [
+    -48.38,
+    6.0,
+    84.76
+   ],
+   "rotY": 1.0472,
+   "skala": [
+    0.987,
+    0.771,
+    1.355
+   ]
+  },
+  {
+   "modul": "STA-008",
+   "name": "city_block_low",
+   "trakt": "suedwestpier-hangar",
+   "pos": [
+    -157.53,
+    6.0,
+    234.15
+   ],
+   "rotY": 1.0472,
+   "skala": [
+    0.785,
+    1.629,
+    1.563
+   ]
+  },
+  {
+   "modul": "STA-008",
+   "name": "city_block_low",
+   "trakt": "westpier-militaer",
+   "pos": [
+    -260.15,
+    6.0,
+    -0.25
+   ],
+   "rotY": -0.0,
+   "skala": [
+    0.738,
+    1.2,
+    1.137
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    89.42,
+    6.0,
+    117.82
+   ],
+   "rotY": 5.3939,
+   "skala": [
+    1,
+    0.773,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "insel",
+   "pos": [
+    86.22,
+    6.0,
+    -152.6
+   ],
+   "rotY": 5.4987,
+   "skala": [
+    1,
+    1.013,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    163.71,
+    6.0,
+    39.78
+   ],
+   "rotY": 2.6271,
+   "skala": [
+    1,
+    0.809,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "insel",
+   "pos": [
+    140.58,
+    6.0,
+    -99.48
+   ],
+   "rotY": 6.0445,
+   "skala": [
+    1,
+    0.961,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    40.29,
+    6.0,
+    142.71
+   ],
+   "rotY": 2.9788,
+   "skala": [
+    1,
+    1.222,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "insel",
+   "pos": [
+    155.58,
+    6.0,
+    108.62
+   ],
+   "rotY": 3.8385,
+   "skala": [
+    1,
+    0.928,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    4.25,
+    6.0,
+    193.72
+   ],
+   "rotY": 3.4522,
+   "skala": [
+    1,
+    0.975,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -171.61,
+    6.0,
+    -79.81
+   ],
+   "rotY": 2.6094,
+   "skala": [
+    1,
+    0.889,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    12.03,
+    6.0,
+    -158.44
+   ],
+   "rotY": 1.7714,
+   "skala": [
+    1,
+    0.841,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -57.23,
+    6.0,
+    -176.97
+   ],
+   "rotY": 0.3392,
+   "skala": [
+    1,
+    1.088,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -188.05,
+    6.0,
+    -35.84
+   ],
+   "rotY": 2.4654,
+   "skala": [
+    1,
+    1.149,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    82.49,
+    6.0,
+    -99.81
+   ],
+   "rotY": 0.0015,
+   "skala": [
+    1,
+    0.776,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "insel",
+   "pos": [
+    -119.26,
+    6.0,
+    159.29
+   ],
+   "rotY": 5.334,
+   "skala": [
+    1,
+    0.811,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "insel",
+   "pos": [
+    -175.99,
+    6.0,
+    61.87
+   ],
+   "rotY": 5.7068,
+   "skala": [
+    1,
+    1.009,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -123.87,
+    6.0,
+    -72.42
+   ],
+   "rotY": 2.2229,
+   "skala": [
+    1,
+    1.205,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    138.53,
+    6.0,
+    -2.04
+   ],
+   "rotY": 5.9199,
+   "skala": [
+    1,
+    1.188,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -30.06,
+    6.0,
+    151.93
+   ],
+   "rotY": 3.1421,
+   "skala": [
+    1,
+    0.895,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    47.0,
+    6.0,
+    -198.78
+   ],
+   "rotY": 3.4623,
+   "skala": [
+    1,
+    1.117,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    187.89,
+    6.0,
+    71.38
+   ],
+   "rotY": 2.1533,
+   "skala": [
+    1,
+    1.241,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -58.68,
+    6.0,
+    192.56
+   ],
+   "rotY": 5.5442,
+   "skala": [
+    1,
+    0.767,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -71.59,
+    6.0,
+    155.99
+   ],
+   "rotY": 3.6698,
+   "skala": [
+    1,
+    1.163,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -110.26,
+    6.0,
+    108.58
+   ],
+   "rotY": 1.6575,
+   "skala": [
+    1,
+    0.872,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    161.84,
+    6.0,
+    -46.78
+   ],
+   "rotY": 2.8924,
+   "skala": [
+    1,
+    1.075,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "insel",
+   "pos": [
+    62.68,
+    6.0,
+    190.66
+   ],
+   "rotY": 5.7589,
+   "skala": [
+    1,
+    0.943,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    104.11,
+    6.0,
+    166.09
+   ],
+   "rotY": 4.0495,
+   "skala": [
+    1,
+    1.126,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    201.39,
+    6.0,
+    12.89
+   ],
+   "rotY": 3.0359,
+   "skala": [
+    1,
+    0.869,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -132.23,
+    6.0,
+    -128.77
+   ],
+   "rotY": 2.6716,
+   "skala": [
+    1,
+    0.814,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -127.91,
+    6.0,
+    58.17
+   ],
+   "rotY": 5.3188,
+   "skala": [
+    1,
+    1.101,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -151.27,
+    6.0,
+    114.07
+   ],
+   "rotY": 4.1931,
+   "skala": [
+    1,
+    0.879,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    192.83,
+    6.0,
+    -28.33
+   ],
+   "rotY": 4.5134,
+   "skala": [
+    1,
+    1.098,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -177.19,
+    6.0,
+    12.12
+   ],
+   "rotY": 3.1145,
+   "skala": [
+    1,
+    0.784,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "insel",
+   "pos": [
+    -22.35,
+    6.0,
+    -193.14
+   ],
+   "rotY": 5.2761,
+   "skala": [
+    1,
+    0.985,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    112.45,
+    6.0,
+    87.34
+   ],
+   "rotY": 3.6417,
+   "skala": [
+    1,
+    0.866,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "insel",
+   "pos": [
+    -150.87,
+    6.0,
+    -36.33
+   ],
+   "rotY": 5.2482,
+   "skala": [
+    1,
+    1.03,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "ostpier",
+   "pos": [
+    381.22,
+    6.0,
+    -18.8
+   ],
+   "rotY": 0.613,
+   "skala": [
+    1,
+    1.213,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "ostpier",
+   "pos": [
+    521.31,
+    6.0,
+    27.66
+   ],
+   "rotY": 0.1007,
+   "skala": [
+    1,
+    1.239,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "ostpier",
+   "pos": [
+    512.46,
+    6.0,
+    -9.41
+   ],
+   "rotY": 4.961,
+   "skala": [
+    1,
+    0.972,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "ostpier",
+   "pos": [
+    560.28,
+    6.0,
+    -11.1
+   ],
+   "rotY": 5.7301,
+   "skala": [
+    1,
+    0.968,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "ostpier",
+   "pos": [
+    438.21,
+    6.0,
+    -34.81
+   ],
+   "rotY": 6.0867,
+   "skala": [
+    1,
+    1.216,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "ostpier",
+   "pos": [
+    475.93,
+    6.0,
+    -25.66
+   ],
+   "rotY": 0.2838,
+   "skala": [
+    1,
+    1.109,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "ostpier",
+   "pos": [
+    430.49,
+    6.0,
+    17.61
+   ],
+   "rotY": 0.1163,
+   "skala": [
+    1,
+    1.224,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "ostpier",
+   "pos": [
+    480.43,
+    6.0,
+    21.93
+   ],
+   "rotY": 5.7351,
+   "skala": [
+    1,
+    1.152,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "ostpier",
+   "pos": [
+    343.71,
+    6.0,
+    -29.84
+   ],
+   "rotY": 1.5663,
+   "skala": [
+    1,
+    1.217,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "ostpier",
+   "pos": [
+    381.79,
+    6.0,
+    35.5
+   ],
+   "rotY": 2.1837,
+   "skala": [
+    1,
+    0.807,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "ostpier",
+   "pos": [
+    233.76,
+    6.0,
+    -50.19
+   ],
+   "rotY": 0.0246,
+   "skala": [
+    1,
+    1.095,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "ostpier",
+   "pos": [
+    334.46,
+    6.0,
+    42.43
+   ],
+   "rotY": 4.9689,
+   "skala": [
+    1,
+    1.241,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "ostpier",
+   "pos": [
+    343.87,
+    6.0,
+    4.26
+   ],
+   "rotY": 0.5376,
+   "skala": [
+    1,
+    1.071,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "ostpier",
+   "pos": [
+    233.07,
+    6.0,
+    47.34
+   ],
+   "rotY": 2.2139,
+   "skala": [
+    1,
+    1.037,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "suedpier",
+   "pos": [
+    185.1,
+    6.0,
+    328.88
+   ],
+   "rotY": 2.5208,
+   "skala": [
+    1,
+    0.847,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "suedwestpier",
+   "pos": [
+    -245.0,
+    6.0,
+    405.4
+   ],
+   "rotY": 2.9261,
+   "skala": [
+    1,
+    1.126,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "suedwestpier",
+   "pos": [
+    -183.83,
+    6.0,
+    373.23
+   ],
+   "rotY": 1.943,
+   "skala": [
+    1,
+    0.754,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -220.73,
+    6.0,
+    343.88
+   ],
+   "rotY": 4.9707,
+   "skala": [
+    1,
+    0.88,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "suedwestpier",
+   "pos": [
+    -293.37,
+    6.0,
+    476.94
+   ],
+   "rotY": 2.0261,
+   "skala": [
+    1,
+    0.887,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -251.56,
+    6.0,
+    460.79
+   ],
+   "rotY": 0.5661,
+   "skala": [
+    1,
+    1.063,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -159.27,
+    6.0,
+    315.22
+   ],
+   "rotY": 3.6844,
+   "skala": [
+    1,
+    1.096,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "suedwestpier",
+   "pos": [
+    -215.85,
+    6.0,
+    434.18
+   ],
+   "rotY": 4.4488,
+   "skala": [
+    1,
+    1.217,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -217.06,
+    6.0,
+    297.29
+   ],
+   "rotY": 3.8055,
+   "skala": [
+    1,
+    0.929,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -96.72,
+    6.0,
+    209.88
+   ],
+   "rotY": 4.6097,
+   "skala": [
+    1,
+    0.862,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -92.11,
+    6.0,
+    246.65
+   ],
+   "rotY": 0.1477,
+   "skala": [
+    1,
+    1.003,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "suedwestpier",
+   "pos": [
+    -280.03,
+    6.0,
+    426.42
+   ],
+   "rotY": 2.0572,
+   "skala": [
+    1,
+    0.778,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -117.17,
+    6.0,
+    285.98
+   ],
+   "rotY": 2.069,
+   "skala": [
+    1,
+    0.888,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "suedwestpier",
+   "pos": [
+    -274.02,
+    6.0,
+    508.07
+   ],
+   "rotY": 2.1304,
+   "skala": [
+    1,
+    0.947,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "westpier",
+   "pos": [
+    -388.08,
+    6.0,
+    -10.59
+   ],
+   "rotY": 0.9051,
+   "skala": [
+    1,
+    1.059,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "westpier",
+   "pos": [
+    -335.37,
+    6.0,
+    5.89
+   ],
+   "rotY": 3.8376,
+   "skala": [
+    1,
+    0.754,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "westpier",
+   "pos": [
+    -305.74,
+    6.0,
+    -17.41
+   ],
+   "rotY": 0.0096,
+   "skala": [
+    1,
+    1.118,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -284.4,
+    6.0,
+    -478.41
+   ],
+   "rotY": 0.7242,
+   "skala": [
+    1,
+    1.173,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "nordwestpier",
+   "pos": [
+    -186.49,
+    6.0,
+    -373.53
+   ],
+   "rotY": 5.8358,
+   "skala": [
+    1,
+    0.9,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "nordwestpier",
+   "pos": [
+    -239.66,
+    6.0,
+    -469.41
+   ],
+   "rotY": 5.431,
+   "skala": [
+    1,
+    1.092,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -250.27,
+    6.0,
+    -422.62
+   ],
+   "rotY": 4.464,
+   "skala": [
+    1,
+    0.803,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "nordwestpier",
+   "pos": [
+    -118.37,
+    6.0,
+    -241.75
+   ],
+   "rotY": 5.6719,
+   "skala": [
+    1,
+    1.19,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "nordwestpier",
+   "pos": [
+    -198.54,
+    6.0,
+    -279.29
+   ],
+   "rotY": 2.0705,
+   "skala": [
+    1,
+    1.205,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "nordwestpier",
+   "pos": [
+    -162.0,
+    6.0,
+    -246.53
+   ],
+   "rotY": 2.6289,
+   "skala": [
+    1,
+    0.941,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "nordwestpier",
+   "pos": [
+    -145.84,
+    6.0,
+    -313.76
+   ],
+   "rotY": 1.6134,
+   "skala": [
+    1,
+    1.043,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -228.17,
+    6.0,
+    -337.37
+   ],
+   "rotY": 6.2538,
+   "skala": [
+    1,
+    1.111,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "nordwestpier",
+   "pos": [
+    -166.69,
+    6.0,
+    -200.37
+   ],
+   "rotY": 1.5879,
+   "skala": [
+    1,
+    0.766,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -286.77,
+    6.0,
+    -440.34
+   ],
+   "rotY": 3.6961,
+   "skala": [
+    1,
+    1.078,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "nordwestpier",
+   "pos": [
+    -211.63,
+    6.0,
+    -415.21
+   ],
+   "rotY": 3.6971,
+   "skala": [
+    1,
+    1.111,
+    1
+   ]
+  },
+  {
+   "modul": "STA-005",
+   "name": "city_tower_slender",
+   "zone": "nordwestpier",
+   "pos": [
+    -233.6,
+    6.0,
+    -383.14
+   ],
+   "rotY": 4.989,
+   "skala": [
+    1,
+    0.834,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -116.59,
+    6.0,
+    -280.86
+   ],
+   "rotY": 1.7621,
+   "skala": [
+    1,
+    0.872,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -75.1,
+    6.0,
+    -223.37
+   ],
+   "rotY": 1.98,
+   "skala": [
+    1,
+    0.83,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordwestpier",
+   "pos": [
+    -114.03,
+    6.0,
+    -204.75
+   ],
+   "rotY": 4.5878,
+   "skala": [
+    1,
+    1.07,
+    1
+   ]
+  },
+  {
+   "modul": "STA-006",
+   "name": "city_tower_stepped",
+   "zone": "nordostpier",
+   "pos": [
+    190.91,
+    6.0,
+    -319.47
+   ],
+   "rotY": 3.4773,
+   "skala": [
+    1,
+    1.129,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordostpier",
+   "pos": [
+    122.69,
+    6.0,
+    -232.05
+   ],
+   "rotY": 0.0756,
+   "skala": [
+    1,
+    0.804,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordostpier",
+   "pos": [
+    147.82,
+    6.0,
+    -255.56
+   ],
+   "rotY": 4.4565,
+   "skala": [
+    1,
+    0.864,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordostpier",
+   "pos": [
+    137.51,
+    6.0,
+    -193.58
+   ],
+   "rotY": 5.8886,
+   "skala": [
+    1,
+    1.208,
+    1
+   ]
+  },
+  {
+   "modul": "STA-007",
+   "name": "city_tower_round",
+   "zone": "nordostpier",
+   "pos": [
+    175.61,
+    6.0,
+    -277.82
+   ],
+   "rotY": 5.3124,
+   "skala": [
+    1,
+    1.228,
+    1
+   ]
+  }
+ ],
+ "raeume": [
+  {
+   "id": "ATL-001",
+   "zone": "turm",
+   "trakt": "turm",
+   "ebene": 6,
+   "pos": [
+    -0.553,
+    337.0,
+    -3.222
+   ],
+   "rotY": 0.2618,
+   "grundriss": [
+    [
+     -16.2,
+     -17.97
+    ],
+    [
+     5.63,
+     -23.82
+    ],
+    [
+     15.1,
+     11.53
+    ],
+    [
+     -6.73,
+     17.38
+    ]
+   ],
+   "hoehe": [
+    336.7,
+    350.4
+   ],
+   "name": "Stargate-Bereitschaft / Gate-Raum"
+  },
+  {
+   "id": "ATL-003",
+   "zone": "turm",
+   "trakt": "turm",
+   "ebene": 6,
+   "pos": [
+    -19.162,
+    341.5,
+    -10.659
+   ],
+   "rotY": -1.309,
+   "grundriss": [
+    [
+     -15.58,
+     -16.86
+    ],
+    [
+     -12.96,
+     -7.08
+    ],
+    [
+     -22.74,
+     -4.46
+    ],
+    [
+     -25.36,
+     -14.24
+    ]
+   ],
+   "hoehe": [
+    341.2,
+    346.3
+   ],
+   "name": "Konferenzraum"
+  },
+  {
+   "id": "ATL-005",
+   "zone": "turm",
+   "trakt": "turm",
+   "ebene": 6,
+   "pos": [
+    9.683,
+    341.5,
+    -22.011
+   ],
+   "rotY": -4.45059,
+   "grundriss": [
+    [
+     7.18,
+     -16.99
+    ],
+    [
+     4.99,
+     -25.16
+    ],
+    [
+     12.43,
+     -27.16
+    ],
+    [
+     14.62,
+     -18.99
+    ]
+   ],
+   "hoehe": [
+    341.4,
+    345.3
+   ],
+   "name": "Büro von Dr. Elizabeth Weir"
+  },
+  {
+   "id": "ATL-048",
+   "zone": "turm",
+   "trakt": "turm",
+   "ebene": 6,
+   "pos": [
+    -3.298,
+    341.5,
+    -25.056
+   ],
+   "rotY": -2.87979,
+   "grundriss": [
+    [
+     4.39,
+     -23.03
+    ],
+    [
+     -8.94,
+     -19.45
+    ],
+    [
+     -10.86,
+     -26.6
+    ],
+    [
+     2.47,
+     -30.17
+    ]
+   ],
+   "hoehe": [
+    341.32,
+    349.2
+   ],
+   "name": "Balkon / Außenbalkon"
+  },
+  {
+   "id": "ATL-040",
+   "zone": "turm",
+   "trakt": "turm",
+   "ebene": 6,
+   "pos": [
+    0.482,
+    350.3,
+    0.642
+   ],
+   "rotY": 0.2618,
+   "grundriss": [
+    [
+     -14.25,
+     -6.57
+    ],
+    [
+     9.63,
+     -12.97
+    ],
+    [
+     15.21,
+     7.86
+    ],
+    [
+     -8.67,
+     14.25
+    ]
+   ],
+   "hoehe": [
+    350.05,
+    357.1
+   ],
+   "name": "Jumper-Bay / Puddle-Jumper-Hangar"
+  },
+  {
+   "id": "ATL-004",
+   "zone": "insel",
+   "trakt": "turm-ost",
+   "ebene": 6,
+   "pos": [
+    -188.184,
+    -22.0,
+    -3.914
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     -183.59,
+     -0.31
+    ],
+    [
+     -192.68,
+     -0.31
+    ],
+    [
+     -192.68,
+     -7.51
+    ],
+    [
+     -183.59,
+     -7.51
+    ]
+   ],
+   "hoehe": [
+    -22.16,
+    -18.2
+   ],
+   "name": "Kommandantur (Büro des Kommandanten)"
+  },
+  {
+   "id": "ATL-007",
+   "zone": "insel",
+   "trakt": "turm-ost",
+   "ebene": 6,
+   "pos": [
+    -188.184,
+    -22.0,
+    6.786
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     -192.08,
+     4.09
+    ],
+    [
+     -184.28,
+     4.09
+    ],
+    [
+     -184.28,
+     9.49
+    ],
+    [
+     -192.08,
+     9.49
+    ]
+   ],
+   "hoehe": [
+    -22.1,
+    -18.5
+   ],
+   "name": "Büro von Steven Caldwell"
+  },
+  {
+   "id": "ATL-008",
+   "zone": "insel",
+   "trakt": "turm-ost",
+   "ebene": 6,
+   "pos": [
+    -197.784,
+    -22.0,
+    -3.814
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     -193.88,
+     -0.31
+    ],
+    [
+     -201.68,
+     -0.31
+    ],
+    [
+     -201.68,
+     -7.31
+    ],
+    [
+     -193.88,
+     -7.31
+    ]
+   ],
+   "hoehe": [
+    -22.3,
+    -18.5
+   ],
+   "name": "Büro von Kate Heightmeyer"
+  },
+  {
+   "id": "ATL-009",
+   "zone": "insel",
+   "trakt": "insel-medizin",
+   "ebene": 4,
+   "pos": [
+    -187.597,
+    -1.0,
+    -33.497
+   ],
+   "rotY": -1.0472,
+   "grundriss": [
+    [
+     -187.65,
+     -46.41
+    ],
+    [
+     -176.44,
+     -26.99
+    ],
+    [
+     -187.54,
+     -20.58
+    ],
+    [
+     -198.75,
+     -40.0
+    ]
+   ],
+   "hoehe": [
+    -1.1,
+    3.3
+   ],
+   "name": "Krankenstation / Infirmary"
+  },
+  {
+   "id": "ATL-010",
+   "zone": "insel",
+   "trakt": "insel-medizin",
+   "ebene": 4,
+   "pos": [
+    -196.43,
+    -1.0,
+    -28.397
+   ],
+   "rotY": -1.0472,
+   "grundriss": [
+    [
+     -196.02,
+     -35.95
+    ],
+    [
+     -189.68,
+     -24.97
+    ],
+    [
+     -196.81,
+     -20.85
+    ],
+    [
+     -203.15,
+     -31.83
+    ]
+   ],
+   "hoehe": [
+    -1.25,
+    3.1
+   ],
+   "name": "Operationsraum / OP"
+  },
+  {
+   "id": "ATL-011",
+   "zone": "insel",
+   "trakt": "insel-medizin",
+   "ebene": 4,
+   "pos": [
+    -178.633,
+    -1.0,
+    -20.37
+   ],
+   "rotY": -5.75959,
+   "grundriss": [
+    [
+     -184.48,
+     -22.7
+    ],
+    [
+     -177.73,
+     -26.6
+    ],
+    [
+     -173.9,
+     -19.98
+    ],
+    [
+     -180.66,
+     -16.08
+    ]
+   ],
+   "hoehe": [
+    -1.1,
+    2.5
+   ],
+   "name": "Isolationsraum"
+  },
+  {
+   "id": "ATL-012",
+   "zone": "insel",
+   "trakt": "insel-medizin",
+   "ebene": 4,
+   "pos": [
+    -174.321,
+    -1.0,
+    -41.162
+   ],
+   "rotY": -4.18879,
+   "grundriss": [
+    [
+     -175.97,
+     -34.98
+    ],
+    [
+     -180.49,
+     -42.81
+    ],
+    [
+     -172.67,
+     -47.33
+    ],
+    [
+     -168.15,
+     -39.5
+    ]
+   ],
+   "hoehe": [
+    -1.2,
+    2.9
+   ],
+   "name": "Kontenainment-Kammer / Containment Chamber Room"
+  },
+  {
+   "id": "ATL-024",
+   "zone": "insel",
+   "trakt": "insel-wohnen",
+   "ebene": 4,
+   "pos": [
+    -143.403,
+    8.0,
+    -38.426
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     -138.13,
+     -34.43
+    ],
+    [
+     -148.99,
+     -34.44
+    ],
+    [
+     -149.0,
+     -44.33
+    ],
+    [
+     -138.13,
+     -44.33
+    ]
+   ],
+   "hoehe": [
+    7.8,
+    12.8
+   ],
+   "name": "Crew-Quartiere / Wohnbereich"
+  },
+  {
+   "id": "ATL-025",
+   "zone": "insel",
+   "trakt": "insel-wohnen",
+   "ebene": 4,
+   "pos": [
+    -143.403,
+    8.0,
+    -21.736
+   ],
+   "rotY": -0.0,
+   "grundriss": [
+    [
+     -154.41,
+     -30.04
+    ],
+    [
+     -132.4,
+     -30.03
+    ],
+    [
+     -132.41,
+     -13.43
+    ],
+    [
+     -154.4,
+     -13.44
+    ]
+   ],
+   "hoehe": [
+    7.9,
+    14.3
+   ],
+   "name": "Kantine / Speisesaal"
+  },
+  {
+   "id": "ATL-026",
+   "zone": "insel",
+   "trakt": "insel-wohnen",
+   "ebene": 4,
+   "pos": [
+    -160.203,
+    8.0,
+    -39.735
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     -152.9,
+     -34.44
+    ],
+    [
+     -167.5,
+     -34.44
+    ],
+    [
+     -167.5,
+     -45.03
+    ],
+    [
+     -152.9,
+     -45.03
+    ]
+   ],
+   "hoehe": [
+    7.8,
+    12.1
+   ],
+   "name": "Fitnessraum / Gym"
+  },
+  {
+   "id": "ATL-027",
+   "zone": "insel",
+   "trakt": "insel-wohnen",
+   "ebene": 4,
+   "pos": [
+    -160.203,
+    8.0,
+    -24.935
+   ],
+   "rotY": -0.0,
+   "grundriss": [
+    [
+     -163.4,
+     -30.03
+    ],
+    [
+     -156.98,
+     -30.03
+    ],
+    [
+     -156.98,
+     -19.84
+    ],
+    [
+     -163.4,
+     -19.84
+    ]
+   ],
+   "hoehe": [
+    7.9,
+    11.5
+   ],
+   "name": "Lesezimmer / Reading Room"
+  },
+  {
+   "id": "ATL-028",
+   "zone": "insel",
+   "trakt": "insel-wohnen",
+   "ebene": 4,
+   "pos": [
+    -177.003,
+    8.0,
+    -42.275
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     -169.71,
+     -34.44
+    ],
+    [
+     -184.3,
+     -34.44
+    ],
+    [
+     -184.3,
+     -50.08
+    ],
+    [
+     -169.7,
+     -50.08
+    ]
+   ],
+   "hoehe": [
+    7.9,
+    12.8
+   ],
+   "name": "Archive"
+  },
+  {
+   "id": "ATL-029",
+   "zone": "insel",
+   "trakt": "insel-wohnen",
+   "ebene": 4,
+   "pos": [
+    -177.003,
+    8.0,
+    -23.835
+   ],
+   "rotY": -0.0,
+   "grundriss": [
+    [
+     -183.5,
+     -30.03
+    ],
+    [
+     -170.5,
+     -30.03
+    ],
+    [
+     -170.5,
+     -17.34
+    ],
+    [
+     -183.5,
+     -17.34
+    ]
+   ],
+   "hoehe": [
+    7.88,
+    13.3
+   ],
+   "name": "Holo-Raum"
+  },
+  {
+   "id": "ATL-043",
+   "zone": "insel",
+   "trakt": "insel-oeffentlich",
+   "ebene": 5,
+   "pos": [
+    -202.521,
+    -1.0,
+    43.68
+   ],
+   "rotY": 0.5236,
+   "grundriss": [
+    [
+     -211.93,
+     42.99
+    ],
+    [
+     -198.42,
+     35.19
+    ],
+    [
+     -193.12,
+     44.37
+    ],
+    [
+     -206.63,
+     52.17
+    ]
+   ],
+   "hoehe": [
+    -1.12,
+    2.8
+   ],
+   "name": "Sektion Sieben / Section Seven"
+  },
+  {
+   "id": "ATL-006",
+   "zone": "insel",
+   "trakt": "insel-oeffentlich",
+   "ebene": 5,
+   "pos": [
+    -209.621,
+    -1.0,
+    31.383
+   ],
+   "rotY": -2.618,
+   "grundriss": [
+    [
+     -202.69,
+     32.58
+    ],
+    [
+     -212.05,
+     37.98
+    ],
+    [
+     -216.55,
+     30.19
+    ],
+    [
+     -207.19,
+     24.79
+    ]
+   ],
+   "hoehe": [
+    -1.1,
+    3.1
+   ],
+   "name": "Hilfs-Kontrollzentrum"
+  },
+  {
+   "id": "ATL-044",
+   "zone": "insel",
+   "trakt": "insel-oeffentlich",
+   "ebene": 5,
+   "pos": [
+    -186.911,
+    -1.0,
+    37.116
+   ],
+   "rotY": 0.5236,
+   "grundriss": [
+    [
+     -197.52,
+     34.67
+    ],
+    [
+     -183.73,
+     26.71
+    ],
+    [
+     -176.31,
+     39.56
+    ],
+    [
+     -190.1,
+     47.52
+    ]
+   ],
+   "hoehe": [
+    -1.1,
+    5.81
+   ],
+   "name": "Stuhl-Raum / Chair Room"
+  },
+  {
+   "id": "ATL-019",
+   "zone": "insel",
+   "trakt": "insel-oeffentlich",
+   "ebene": 5,
+   "pos": [
+    -195.296,
+    -1.0,
+    22.593
+   ],
+   "rotY": -2.618,
+   "grundriss": [
+    [
+     -188.53,
+     24.4
+    ],
+    [
+     -197.11,
+     29.35
+    ],
+    [
+     -202.06,
+     20.78
+    ],
+    [
+     -193.48,
+     15.83
+    ]
+   ],
+   "hoehe": [
+    -1.3,
+    2.9
+   ],
+   "name": "Labor von Janus"
+  },
+  {
+   "id": "ATL-046",
+   "zone": "insel",
+   "trakt": "insel-oeffentlich",
+   "ebene": 5,
+   "pos": [
+    -166.495,
+    -1.0,
+    29.278
+   ],
+   "rotY": 0.5236,
+   "grundriss": [
+    [
+     -181.3,
+     25.31
+    ],
+    [
+     -162.53,
+     14.47
+    ],
+    [
+     -151.69,
+     33.25
+    ],
+    [
+     -170.46,
+     44.09
+    ]
+   ],
+   "hoehe": [
+    -1.1,
+    6.2
+   ],
+   "name": "Erdungsstationen 1–4"
+  },
+  {
+   "id": "ATL-036",
+   "zone": "insel",
+   "trakt": "insel-energie",
+   "ebene": 1,
+   "pos": [
+    -188.3,
+    8.0,
+    24.936
+   ],
+   "rotY": 2.61799,
+   "grundriss": [
+    [
+     -182.28,
+     35.11
+    ],
+    [
+     -200.12,
+     24.81
+    ],
+    [
+     -194.32,
+     14.76
+    ],
+    [
+     -176.48,
+     25.06
+    ]
+   ],
+   "hoehe": [
+    7.9,
+    12.8
+   ],
+   "name": "Hauptstromraum / Main Power Room"
+  },
+  {
+   "id": "ATL-037",
+   "zone": "insel",
+   "trakt": "insel-energie",
+   "ebene": 1,
+   "pos": [
+    -196.27,
+    8.0,
+    38.74
+   ],
+   "rotY": -0.5236,
+   "grundriss": [
+    [
+     -198.86,
+     30.62
+    ],
+    [
+     -187.91,
+     36.94
+    ],
+    [
+     -193.63,
+     46.85
+    ],
+    [
+     -204.58,
+     40.53
+    ]
+   ],
+   "hoehe": [
+    7.8,
+    12.1
+   ],
+   "name": "Stromverteilzentrum"
+  },
+  {
+   "id": "ATL-038",
+   "zone": "insel",
+   "trakt": "insel-kern",
+   "ebene": 0,
+   "pos": [
+    -183.6,
+    -10.0,
+    11.033
+   ],
+   "rotY": 6.28319,
+   "grundriss": [
+    [
+     -190.39,
+     4.19
+    ],
+    [
+     -176.8,
+     4.19
+    ],
+    [
+     -176.8,
+     17.84
+    ],
+    [
+     -190.4,
+     17.84
+    ]
+   ],
+   "hoehe": [
+    -10.1,
+    -4.7
+   ],
+   "name": "ZPM-Raum / Zentraler Power-Modulator"
+  },
+  {
+   "id": "ATL-039",
+   "zone": "insel",
+   "trakt": "insel-stasis",
+   "ebene": 2,
+   "pos": [
+    -194.367,
+    8.0,
+    -31.6
+   ],
+   "rotY": -1.5708,
+   "grundriss": [
+    [
+     -189.47,
+     -37.9
+    ],
+    [
+     -189.47,
+     -25.3
+    ],
+    [
+     -199.26,
+     -25.3
+    ],
+    [
+     -199.26,
+     -37.9
+    ]
+   ],
+   "hoehe": [
+    7.9,
+    12.1
+   ],
+   "name": "Stasis-Kammer / Stasis Chamber Room"
+  },
+  {
+   "id": "ATL-042",
+   "zone": "insel",
+   "trakt": "insel-plaza",
+   "ebene": 5,
+   "pos": [
+    85.338,
+    14.0,
+    -92.622
+   ],
+   "rotY": -4.18879,
+   "grundriss": [
+    [
+     81.47,
+     -62.11
+    ],
+    [
+     56.97,
+     -104.54
+    ],
+    [
+     89.19,
+     -123.14
+    ],
+    [
+     113.69,
+     -80.71
+    ]
+   ],
+   "hoehe": [
+    13.88,
+    19.3
+   ],
+   "name": "Platz / Plaza"
+  },
+  {
+   "id": "ATL-014",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    284.431,
+    2.0,
+    -56.001
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     292.11,
+     -49.82
+    ],
+    [
+     276.75,
+     -49.82
+    ],
+    [
+     276.75,
+     -62.18
+    ],
+    [
+     292.11,
+     -62.18
+    ]
+   ],
+   "hoehe": [
+    1.8,
+    6.1
+   ],
+   "name": "Wissenschaftslabor"
+  },
+  {
+   "id": "ATL-013",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    286.831,
+    2.0,
+    -41.311
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     278.28,
+     -45.42
+    ],
+    [
+     295.38,
+     -45.42
+    ],
+    [
+     295.38,
+     -37.26
+    ],
+    [
+     278.28,
+     -37.26
+    ]
+   ],
+   "hoehe": [
+    2.0,
+    5.5
+   ],
+   "name": "Biolabor"
+  },
+  {
+   "id": "ATL-015",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    270.031,
+    2.0,
+    -55.071
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     274.83,
+     -49.82
+    ],
+    [
+     265.23,
+     -49.82
+    ],
+    [
+     265.23,
+     -60.32
+    ],
+    [
+     274.83,
+     -60.32
+    ]
+   ],
+   "hoehe": [
+    1.88,
+    5.5
+   ],
+   "name": "Nanite-Labor"
+  },
+  {
+   "id": "ATL-018",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    270.031,
+    2.0,
+    -41.721
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     264.93,
+     -45.42
+    ],
+    [
+     275.13,
+     -45.42
+    ],
+    [
+     275.13,
+     -38.02
+    ],
+    [
+     264.93,
+     -38.02
+    ]
+   ],
+   "hoehe": [
+    1.8,
+    5.5
+   ],
+   "name": "Labor von Radek Zelenka"
+  },
+  {
+   "id": "ATL-022",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    255.631,
+    2.0,
+    -53.931
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     260.34,
+     -49.82
+    ],
+    [
+     250.92,
+     -49.82
+    ],
+    [
+     250.92,
+     -58.04
+    ],
+    [
+     260.34,
+     -58.04
+    ]
+   ],
+   "hoehe": [
+    1.61,
+    5.7
+   ],
+   "name": "Aufstiegs-Forschungslabor"
+  },
+  {
+   "id": "ATL-020",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    255.631,
+    2.0,
+    -41.281
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     250.09,
+     -45.42
+    ],
+    [
+     261.08,
+     -45.42
+    ],
+    [
+     261.08,
+     -36.81
+    ],
+    [
+     250.09,
+     -36.81
+    ]
+   ],
+   "hoehe": [
+    1.9,
+    5.7
+   ],
+   "name": "Gesellschaftsforschungs-Labor"
+  },
+  {
+   "id": "ATL-023",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    241.231,
+    2.0,
+    -53.671
+   ],
+   "rotY": 3.14159,
+   "grundriss": [
+    [
+     247.53,
+     -49.82
+    ],
+    [
+     234.93,
+     -49.82
+    ],
+    [
+     234.93,
+     -57.47
+    ],
+    [
+     247.53,
+     -57.47
+    ]
+   ],
+   "hoehe": [
+    1.9,
+    5.7
+   ],
+   "name": "Labor 3"
+  },
+  {
+   "id": "ATL-016",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    240.631,
+    2.0,
+    -41.231
+   ],
+   "rotY": 1.57079,
+   "grundriss": [
+    [
+     234.65,
+     -37.04
+    ],
+    [
+     234.65,
+     -45.42
+    ],
+    [
+     246.61,
+     -45.42
+    ],
+    [
+     246.61,
+     -37.04
+    ]
+   ],
+   "hoehe": [
+    1.88,
+    6.8
+   ],
+   "name": "Botanik-Labor"
+  },
+  {
+   "id": "ATL-017",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    227.048,
+    2.0,
+    -56.332
+   ],
+   "rotY": 8.83123,
+   "grundriss": [
+    [
+     227.84,
+     -49.82
+    ],
+    [
+     220.71,
+     -54.63
+    ],
+    [
+     226.25,
+     -62.84
+    ],
+    [
+     233.38,
+     -58.03
+    ]
+   ],
+   "hoehe": [
+    1.9,
+    5.5
+   ],
+   "name": "Pflanzenkammer"
+  },
+  {
+   "id": "ATL-021",
+   "zone": "ostpier",
+   "trakt": "ostpier-labore",
+   "ebene": 3,
+   "pos": [
+    226.831,
+    2.0,
+    -40.291
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     222.1,
+     -45.42
+    ],
+    [
+     231.56,
+     -45.42
+    ],
+    [
+     231.56,
+     -35.19
+    ],
+    [
+     222.1,
+     -35.19
+    ]
+   ],
+   "hoehe": [
+    1.81,
+    6.3
+   ],
+   "name": "Aufstiegs-Labor"
+  },
+  {
+   "id": "ATL-034",
+   "zone": "suedpier",
+   "trakt": "suedpier-fracht",
+   "ebene": 2,
+   "pos": [
+    96.4,
+    5.0,
+    257.94
+   ],
+   "rotY": -0.0,
+   "grundriss": [
+    [
+     83.6,
+     247.64
+    ],
+    [
+     109.2,
+     247.64
+    ],
+    [
+     109.2,
+     268.24
+    ],
+    [
+     83.6,
+     268.24
+    ]
+   ],
+   "hoehe": [
+    4.9,
+    12.3
+   ],
+   "name": "Ladungshalt / Cargo Hold"
+  },
+  {
+   "id": "ATL-035",
+   "zone": "suedpier",
+   "trakt": "suedpier-fracht",
+   "ebene": 2,
+   "pos": [
+    96.4,
+    5.0,
+    239.34
+   ],
+   "rotY": -3.14159,
+   "grundriss": [
+    [
+     101.5,
+     243.23
+    ],
+    [
+     91.3,
+     243.24
+    ],
+    [
+     91.3,
+     235.44
+    ],
+    [
+     101.5,
+     235.44
+    ]
+   ],
+   "hoehe": [
+    4.71,
+    9.1
+   ],
+   "name": "Gefahrstofflager / HAZMAT Storage"
+  },
+  {
+   "id": "ATL-047",
+   "zone": "suedpier",
+   "trakt": "suedpier-wasser",
+   "ebene": 1,
+   "pos": [
+    94.293,
+    -10.0,
+    252.022
+   ],
+   "rotY": -0.5236,
+   "grundriss": [
+    [
+     90.32,
+     237.25
+    ],
+    [
+     109.07,
+     248.07
+    ],
+    [
+     98.26,
+     266.8
+    ],
+    [
+     79.52,
+     255.98
+    ]
+   ],
+   "hoehe": [
+    -10.1,
+    -1.7
+   ],
+   "name": "Entsalzungstanks"
+  },
+  {
+   "id": "ATL-041",
+   "zone": "suedwestpier",
+   "trakt": "suedwestpier-hangar",
+   "ebene": 5,
+   "pos": [
+    -433.26,
+    -4.0,
+    354.66
+   ],
+   "rotY": 1.04719,
+   "grundriss": [
+    [
+     -460.12,
+     362.59
+    ],
+    [
+     -439.82,
+     327.43
+    ],
+    [
+     -406.4,
+     346.73
+    ],
+    [
+     -426.7,
+     381.89
+    ]
+   ],
+   "hoehe": [
+    -4.3,
+    8.3
+   ],
+   "name": "Hangar / Hangar"
+  },
+  {
+   "id": "ATL-030",
+   "zone": "westpier",
+   "trakt": "westpier-militaer",
+   "ebene": 5,
+   "pos": [
+    -489.393,
+    5.0,
+    -89.584
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     -495.69,
+     -93.63
+    ],
+    [
+     -483.09,
+     -93.63
+    ],
+    [
+     -483.09,
+     -85.53
+    ],
+    [
+     -495.69,
+     -85.53
+    ]
+   ],
+   "hoehe": [
+    4.8,
+    8.5
+   ],
+   "name": "Waffenkammer / Armory"
+  },
+  {
+   "id": "ATL-031",
+   "zone": "westpier",
+   "trakt": "westpier-militaer",
+   "ebene": 5,
+   "pos": [
+    -489.393,
+    5.0,
+    -103.134
+   ],
+   "rotY": -3.1416,
+   "grundriss": [
+    [
+     -483.69,
+     -98.03
+    ],
+    [
+     -495.09,
+     -98.03
+    ],
+    [
+     -495.09,
+     -108.23
+    ],
+    [
+     -483.69,
+     -108.23
+    ]
+   ],
+   "hoehe": [
+    4.4,
+    8.5
+   ],
+   "name": "Zellen / Arrest (Brig)"
+  },
+  {
+   "id": "ATL-032",
+   "zone": "westpier",
+   "trakt": "westpier-militaer",
+   "ebene": 5,
+   "pos": [
+    -470.193,
+    5.0,
+    -87.084
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     -480.49,
+     -93.63
+    ],
+    [
+     -459.89,
+     -93.63
+    ],
+    [
+     -459.89,
+     -80.53
+    ],
+    [
+     -480.49,
+     -80.53
+    ]
+   ],
+   "hoehe": [
+    4.9,
+    10.3
+   ],
+   "name": "Drohnen-Waffenlager"
+  },
+  {
+   "id": "ATL-033",
+   "zone": "westpier",
+   "trakt": "westpier-militaer",
+   "ebene": 5,
+   "pos": [
+    -470.193,
+    5.0,
+    -104.334
+   ],
+   "rotY": -3.1416,
+   "grundriss": [
+    [
+     -461.89,
+     -98.03
+    ],
+    [
+     -478.49,
+     -98.03
+    ],
+    [
+     -478.49,
+     -110.63
+    ],
+    [
+     -461.89,
+     -110.63
+    ]
+   ],
+   "hoehe": [
+    4.9,
+    11.3
+   ],
+   "name": "Drohnen-Startplattform"
+  }
+ ],
+ "korridore": [
+  {
+   "id": "K-turm-ost-00",
+   "modell": "ATL-049",
+   "trakt": "turm-ost",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -182.184,
+    -22.0,
+    1.886
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -182.18,
+     -0.21
+    ],
+    [
+     -182.18,
+     3.99
+    ],
+    [
+     -191.78,
+     3.99
+    ],
+    [
+     -191.78,
+     -0.21
+    ]
+   ]
+  },
+  {
+   "id": "K-turm-ost-01",
+   "modell": "ATL-049",
+   "trakt": "turm-ost",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    -191.784,
+    -22.0,
+    1.886
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -191.78,
+     -0.21
+    ],
+    [
+     -191.78,
+     3.99
+    ],
+    [
+     -201.38,
+     3.99
+    ],
+    [
+     -201.38,
+     -0.21
+    ]
+   ]
+  },
+  {
+   "id": "K-turm-ost-02",
+   "modell": "ATL-049",
+   "trakt": "turm-ost",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -201.384,
+    -22.0,
+    1.886
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -201.38,
+     -0.21
+    ],
+    [
+     -201.38,
+     3.99
+    ],
+    [
+     -206.18,
+     3.99
+    ],
+    [
+     -206.18,
+     -0.21
+    ]
+   ]
+  },
+  {
+   "id": "K-turm-west-00",
+   "modell": "ATL-049",
+   "trakt": "turm-west",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -14.719,
+    337.0,
+    -11.85
+   ],
+   "rotY": -1.309,
+   "grundriss": [
+    [
+     -15.26,
+     -13.88
+    ],
+    [
+     -14.18,
+     -9.82
+    ],
+    [
+     -18.81,
+     -8.58
+    ],
+    [
+     -19.9,
+     -12.64
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-medizin-00",
+   "modell": "ATL-049",
+   "trakt": "insel-medizin",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    -186.741,
+    -1.0,
+    -49.233
+   ],
+   "rotY": 0.5236,
+   "grundriss": [
+    [
+     -188.56,
+     -48.18
+    ],
+    [
+     -184.92,
+     -50.28
+    ],
+    [
+     -181.32,
+     -44.04
+    ],
+    [
+     -184.96,
+     -41.94
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-medizin-01",
+   "modell": "ATL-049",
+   "trakt": "insel-medizin",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -183.141,
+    -1.0,
+    -42.998
+   ],
+   "rotY": 0.5236,
+   "grundriss": [
+    [
+     -184.96,
+     -41.94
+    ],
+    [
+     -181.32,
+     -44.04
+    ],
+    [
+     -176.52,
+     -35.73
+    ],
+    [
+     -180.16,
+     -33.63
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-medizin-02",
+   "modell": "ATL-049",
+   "trakt": "insel-medizin",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -178.341,
+    -1.0,
+    -34.684
+   ],
+   "rotY": 0.5236,
+   "grundriss": [
+    [
+     -180.16,
+     -33.63
+    ],
+    [
+     -176.52,
+     -35.73
+    ],
+    [
+     -174.12,
+     -31.57
+    ],
+    [
+     -177.76,
+     -29.47
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-00",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    -130.203,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -130.2,
+     -34.34
+    ],
+    [
+     -130.2,
+     -30.13
+    ],
+    [
+     -137.4,
+     -30.13
+    ],
+    [
+     -137.41,
+     -34.33
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-01",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -137.403,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -137.41,
+     -34.33
+    ],
+    [
+     -137.4,
+     -30.13
+    ],
+    [
+     -147.0,
+     -30.13
+    ],
+    [
+     -147.0,
+     -34.34
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-02",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    -147.003,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -147.0,
+     -34.34
+    ],
+    [
+     -147.0,
+     -30.13
+    ],
+    [
+     -154.21,
+     -30.13
+    ],
+    [
+     -154.21,
+     -34.33
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-03",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -154.203,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -154.21,
+     -34.33
+    ],
+    [
+     -154.21,
+     -30.13
+    ],
+    [
+     -163.8,
+     -30.13
+    ],
+    [
+     -163.8,
+     -34.34
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-04",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    -163.803,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -163.8,
+     -34.34
+    ],
+    [
+     -163.8,
+     -30.13
+    ],
+    [
+     -171.01,
+     -30.13
+    ],
+    [
+     -171.01,
+     -34.33
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-05",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -171.003,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -171.01,
+     -34.33
+    ],
+    [
+     -171.01,
+     -30.13
+    ],
+    [
+     -180.6,
+     -30.13
+    ],
+    [
+     -180.6,
+     -34.34
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-wohnen-06",
+   "modell": "ATL-049",
+   "trakt": "insel-wohnen",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -180.603,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     -180.6,
+     -34.34
+    ],
+    [
+     -180.6,
+     -30.13
+    ],
+    [
+     -185.41,
+     -30.13
+    ],
+    [
+     -185.41,
+     -34.33
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-00",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    -215.624,
+    -1.0,
+    42.585
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -214.57,
+     44.4
+    ],
+    [
+     -216.67,
+     40.77
+    ],
+    [
+     -212.52,
+     38.37
+    ],
+    [
+     -210.42,
+     42.0
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-01",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -211.467,
+    -1.0,
+    40.185
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -210.42,
+     42.0
+    ],
+    [
+     -212.52,
+     38.37
+    ],
+    [
+     -204.2,
+     33.57
+    ],
+    [
+     -202.1,
+     37.2
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-02",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    -203.153,
+    -1.0,
+    35.385
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -202.1,
+     37.2
+    ],
+    [
+     -204.2,
+     33.57
+    ],
+    [
+     -197.97,
+     29.97
+    ],
+    [
+     -195.87,
+     33.6
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-03",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -196.918,
+    -1.0,
+    31.785
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -195.87,
+     33.6
+    ],
+    [
+     -197.97,
+     29.97
+    ],
+    [
+     -189.65,
+     25.17
+    ],
+    [
+     -187.55,
+     28.8
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-04",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 12.0,
+    "variante": "gerade"
+   },
+   "pos": [
+    -188.604,
+    -1.0,
+    26.985
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -187.55,
+     28.8
+    ],
+    [
+     -189.65,
+     25.17
+    ],
+    [
+     -179.26,
+     19.17
+    ],
+    [
+     -177.16,
+     22.8
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-05",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    -178.211,
+    -1.0,
+    20.985
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -177.16,
+     22.8
+    ],
+    [
+     -179.26,
+     19.17
+    ],
+    [
+     -170.95,
+     14.37
+    ],
+    [
+     -168.85,
+     18.0
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-oeffentlich-06",
+   "modell": "ATL-049",
+   "trakt": "insel-oeffentlich",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -169.898,
+    -1.0,
+    16.185
+   ],
+   "rotY": 2.09439,
+   "grundriss": [
+    [
+     -168.85,
+     18.0
+    ],
+    [
+     -170.95,
+     14.37
+    ],
+    [
+     -166.79,
+     11.97
+    ],
+    [
+     -164.69,
+     15.6
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-energie-00",
+   "modell": "ATL-049",
+   "trakt": "insel-energie",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    -180.869,
+    8.0,
+    38.464
+   ],
+   "rotY": 4.18879,
+   "grundriss": [
+    [
+     -179.82,
+     36.65
+    ],
+    [
+     -181.92,
+     40.28
+    ],
+    [
+     -188.15,
+     36.68
+    ],
+    [
+     -186.05,
+     33.05
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-energie-01",
+   "modell": "ATL-049",
+   "trakt": "insel-energie",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -187.104,
+    8.0,
+    34.864
+   ],
+   "rotY": 4.18879,
+   "grundriss": [
+    [
+     -186.05,
+     33.05
+    ],
+    [
+     -188.15,
+     36.68
+    ],
+    [
+     -196.47,
+     31.88
+    ],
+    [
+     -194.37,
+     28.25
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-energie-02",
+   "modell": "ATL-049",
+   "trakt": "insel-energie",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -195.418,
+    8.0,
+    30.064
+   ],
+   "rotY": 4.18879,
+   "grundriss": [
+    [
+     -194.37,
+     28.25
+    ],
+    [
+     -196.47,
+     31.88
+    ],
+    [
+     -200.62,
+     29.48
+    ],
+    [
+     -198.52,
+     25.85
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-kern-00",
+   "modell": "ATL-049",
+   "trakt": "insel-kern",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    -194.4,
+    -10.0,
+    1.983
+   ],
+   "rotY": 7.85398,
+   "grundriss": [
+    [
+     -194.4,
+     4.09
+    ],
+    [
+     -194.4,
+     -0.12
+    ],
+    [
+     -189.6,
+     -0.12
+    ],
+    [
+     -189.6,
+     4.08
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-kern-01",
+   "modell": "ATL-049",
+   "trakt": "insel-kern",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    -189.601,
+    -10.0,
+    1.983
+   ],
+   "rotY": 7.85398,
+   "grundriss": [
+    [
+     -189.6,
+     4.08
+    ],
+    [
+     -189.6,
+     -0.12
+    ],
+    [
+     -180.0,
+     -0.12
+    ],
+    [
+     -180.0,
+     4.09
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-kern-02",
+   "modell": "ATL-049",
+   "trakt": "insel-kern",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -180.001,
+    -10.0,
+    1.983
+   ],
+   "rotY": 7.85398,
+   "grundriss": [
+    [
+     -180.0,
+     4.09
+    ],
+    [
+     -180.0,
+     -0.12
+    ],
+    [
+     -175.2,
+     -0.12
+    ],
+    [
+     -175.2,
+     4.08
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-stasis-00",
+   "modell": "ATL-049",
+   "trakt": "insel-stasis",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    -187.267,
+    8.0,
+    -42.4
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     -189.37,
+     -42.4
+    ],
+    [
+     -185.16,
+     -42.4
+    ],
+    [
+     -185.17,
+     -37.6
+    ],
+    [
+     -189.37,
+     -37.6
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-stasis-01",
+   "modell": "ATL-049",
+   "trakt": "insel-stasis",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    -187.267,
+    8.0,
+    -37.6
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     -189.37,
+     -37.6
+    ],
+    [
+     -185.17,
+     -37.6
+    ],
+    [
+     -185.16,
+     -28.0
+    ],
+    [
+     -189.37,
+     -28.0
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-stasis-02",
+   "modell": "ATL-049",
+   "trakt": "insel-stasis",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -187.267,
+    8.0,
+    -28.0
+   ],
+   "rotY": 0.0,
+   "grundriss": [
+    [
+     -189.37,
+     -28.0
+    ],
+    [
+     -185.16,
+     -28.0
+    ],
+    [
+     -185.17,
+     -23.2
+    ],
+    [
+     -189.37,
+     -23.2
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-plaza-00",
+   "modell": "ATL-049",
+   "trakt": "insel-plaza",
+   "opts": {
+    "laenge": 21.599999999999998,
+    "variante": "gerade"
+   },
+   "pos": [
+    81.125,
+    14.0,
+    -58.319
+   ],
+   "rotY": -2.61799,
+   "grundriss": [
+    [
+     82.94,
+     -59.37
+    ],
+    [
+     79.3,
+     -57.27
+    ],
+    [
+     68.5,
+     -75.98
+    ],
+    [
+     72.14,
+     -78.08
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-plaza-01",
+   "modell": "ATL-049",
+   "trakt": "insel-plaza",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    70.325,
+    14.0,
+    -77.025
+   ],
+   "rotY": -2.61799,
+   "grundriss": [
+    [
+     72.14,
+     -78.08
+    ],
+    [
+     68.5,
+     -75.98
+    ],
+    [
+     63.7,
+     -84.29
+    ],
+    [
+     67.34,
+     -86.39
+    ]
+   ]
+  },
+  {
+   "id": "K-insel-plaza-02",
+   "modell": "ATL-049",
+   "trakt": "insel-plaza",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    65.525,
+    14.0,
+    -85.339
+   ],
+   "rotY": -2.61799,
+   "grundriss": [
+    [
+     67.34,
+     -86.39
+    ],
+    [
+     63.7,
+     -84.29
+    ],
+    [
+     61.3,
+     -88.45
+    ],
+    [
+     64.94,
+     -90.55
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-00",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    297.631,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     297.63,
+     -49.72
+    ],
+    [
+     297.63,
+     -45.52
+    ],
+    [
+     290.43,
+     -45.52
+    ],
+    [
+     290.43,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-01",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    290.431,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     290.43,
+     -49.72
+    ],
+    [
+     290.43,
+     -45.52
+    ],
+    [
+     280.83,
+     -45.52
+    ],
+    [
+     280.83,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-02",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    280.831,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     280.83,
+     -49.72
+    ],
+    [
+     280.83,
+     -45.52
+    ],
+    [
+     276.03,
+     -45.52
+    ],
+    [
+     276.03,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-03",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    276.031,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     276.03,
+     -49.72
+    ],
+    [
+     276.03,
+     -45.52
+    ],
+    [
+     266.43,
+     -45.52
+    ],
+    [
+     266.43,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-04",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    266.431,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     266.43,
+     -49.72
+    ],
+    [
+     266.43,
+     -45.52
+    ],
+    [
+     261.63,
+     -45.52
+    ],
+    [
+     261.63,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-05",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    261.631,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     261.63,
+     -49.72
+    ],
+    [
+     261.63,
+     -45.52
+    ],
+    [
+     252.03,
+     -45.52
+    ],
+    [
+     252.03,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-06",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    252.031,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     252.03,
+     -49.72
+    ],
+    [
+     252.03,
+     -45.52
+    ],
+    [
+     247.23,
+     -45.52
+    ],
+    [
+     247.23,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-07",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    247.231,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     247.23,
+     -49.72
+    ],
+    [
+     247.23,
+     -45.52
+    ],
+    [
+     237.63,
+     -45.52
+    ],
+    [
+     237.63,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-08",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    237.631,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     237.63,
+     -49.72
+    ],
+    [
+     237.63,
+     -45.52
+    ],
+    [
+     232.83,
+     -45.52
+    ],
+    [
+     232.83,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-09",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    232.831,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     232.83,
+     -49.72
+    ],
+    [
+     232.83,
+     -45.52
+    ],
+    [
+     223.23,
+     -45.52
+    ],
+    [
+     223.23,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-ostpier-labore-10",
+   "modell": "ATL-049",
+   "trakt": "ostpier-labore",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    223.231,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "grundriss": [
+    [
+     223.23,
+     -49.72
+    ],
+    [
+     223.23,
+     -45.52
+    ],
+    [
+     218.43,
+     -45.52
+    ],
+    [
+     218.43,
+     -49.72
+    ]
+   ]
+  },
+  {
+   "id": "K-suedpier-fracht-00",
+   "modell": "ATL-049",
+   "trakt": "suedpier-fracht",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade"
+   },
+   "pos": [
+    80.8,
+    5.0,
+    245.44
+   ],
+   "rotY": 1.5708,
+   "grundriss": [
+    [
+     80.8,
+     247.54
+    ],
+    [
+     80.8,
+     243.34
+    ],
+    [
+     90.4,
+     243.34
+    ],
+    [
+     90.4,
+     247.54
+    ]
+   ]
+  },
+  {
+   "id": "K-suedpier-fracht-01",
+   "modell": "ATL-049",
+   "trakt": "suedpier-fracht",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    90.4,
+    5.0,
+    245.44
+   ],
+   "rotY": 1.5708,
+   "grundriss": [
+    [
+     90.4,
+     247.54
+    ],
+    [
+     90.4,
+     243.34
+    ],
+    [
+     100.0,
+     243.34
+    ],
+    [
+     100.0,
+     247.54
+    ]
+   ]
+  },
+  {
+   "id": "K-suedpier-fracht-02",
+   "modell": "ATL-049",
+   "trakt": "suedpier-fracht",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    100.0,
+    5.0,
+    245.44
+   ],
+   "rotY": 1.5708,
+   "grundriss": [
+    [
+     100.0,
+     247.54
+    ],
+    [
+     100.0,
+     243.34
+    ],
+    [
+     104.8,
+     243.34
+    ],
+    [
+     104.8,
+     247.54
+    ]
+   ]
+  },
+  {
+   "id": "K-suedpier-wasser-00",
+   "modell": "ATL-049",
+   "trakt": "suedpier-wasser",
+   "opts": {
+    "laenge": 7.199999999999999,
+    "variante": "gerade"
+   },
+   "pos": [
+    89.367,
+    -10.0,
+    234.156
+   ],
+   "rotY": 1.0472,
+   "grundriss": [
+    [
+     88.32,
+     235.98
+    ],
+    [
+     90.42,
+     232.34
+    ],
+    [
+     96.65,
+     235.93
+    ],
+    [
+     94.55,
+     239.57
+    ]
+   ]
+  },
+  {
+   "id": "K-suedpier-wasser-01",
+   "modell": "ATL-049",
+   "trakt": "suedpier-wasser",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    95.602,
+    -10.0,
+    237.755
+   ],
+   "rotY": 1.0472,
+   "grundriss": [
+    [
+     94.55,
+     239.57
+    ],
+    [
+     96.65,
+     235.93
+    ],
+    [
+     104.97,
+     240.74
+    ],
+    [
+     102.87,
+     244.38
+    ]
+   ]
+  },
+  {
+   "id": "K-suedpier-wasser-02",
+   "modell": "ATL-049",
+   "trakt": "suedpier-wasser",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    103.916,
+    -10.0,
+    242.556
+   ],
+   "rotY": 1.0472,
+   "grundriss": [
+    [
+     102.87,
+     244.38
+    ],
+    [
+     104.97,
+     240.74
+    ],
+    [
+     109.12,
+     243.13
+    ],
+    [
+     107.02,
+     246.77
+    ]
+   ]
+  },
+  {
+   "id": "K-suedwestpier-hangar-00",
+   "modell": "ATL-049",
+   "trakt": "suedwestpier-hangar",
+   "opts": {
+    "laenge": 16.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    -463.28,
+    -4.0,
+    363.655
+   ],
+   "rotY": 2.61799,
+   "grundriss": [
+    [
+     -461.46,
+     364.7
+    ],
+    [
+     -465.1,
+     362.6
+    ],
+    [
+     -456.7,
+     348.05
+    ],
+    [
+     -453.06,
+     350.15
+    ]
+   ]
+  },
+  {
+   "id": "K-suedwestpier-hangar-01",
+   "modell": "ATL-049",
+   "trakt": "suedwestpier-hangar",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade",
+    "seitentuer": true
+   },
+   "pos": [
+    -454.88,
+    -4.0,
+    349.106
+   ],
+   "rotY": 2.61799,
+   "grundriss": [
+    [
+     -453.06,
+     350.15
+    ],
+    [
+     -456.7,
+     348.05
+    ],
+    [
+     -451.9,
+     339.74
+    ],
+    [
+     -448.26,
+     341.84
+    ]
+   ]
+  },
+  {
+   "id": "K-suedwestpier-hangar-02",
+   "modell": "ATL-049",
+   "trakt": "suedwestpier-hangar",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -450.08,
+    -4.0,
+    340.792
+   ],
+   "rotY": 2.61799,
+   "grundriss": [
+    [
+     -448.26,
+     341.84
+    ],
+    [
+     -451.9,
+     339.74
+    ],
+    [
+     -449.5,
+     335.58
+    ],
+    [
+     -445.86,
+     337.68
+    ]
+   ]
+  },
+  {
+   "id": "K-westpier-militaer-00",
+   "modell": "ATL-049",
+   "trakt": "westpier-militaer",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "gerade"
+   },
+   "pos": [
+    -500.193,
+    5.0,
+    -95.834
+   ],
+   "rotY": 1.57079,
+   "grundriss": [
+    [
+     -500.19,
+     -93.73
+    ],
+    [
+     -500.19,
+     -97.93
+    ],
+    [
+     -495.39,
+     -97.93
+    ],
+    [
+     -495.39,
+     -93.73
+    ]
+   ]
+  },
+  {
+   "id": "K-westpier-militaer-01",
+   "modell": "ATL-049",
+   "trakt": "westpier-militaer",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -495.393,
+    5.0,
+    -95.834
+   ],
+   "rotY": 1.57079,
+   "grundriss": [
+    [
+     -495.39,
+     -93.73
+    ],
+    [
+     -495.39,
+     -97.93
+    ],
+    [
+     -485.79,
+     -97.93
+    ],
+    [
+     -485.79,
+     -93.73
+    ]
+   ]
+  },
+  {
+   "id": "K-westpier-militaer-02",
+   "modell": "ATL-049",
+   "trakt": "westpier-militaer",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "gerade"
+   },
+   "pos": [
+    -485.793,
+    5.0,
+    -95.834
+   ],
+   "rotY": 1.57079,
+   "grundriss": [
+    [
+     -485.79,
+     -93.73
+    ],
+    [
+     -485.79,
+     -97.93
+    ],
+    [
+     -476.19,
+     -97.93
+    ],
+    [
+     -476.19,
+     -93.73
+    ]
+   ]
+  },
+  {
+   "id": "K-westpier-militaer-03",
+   "modell": "ATL-049",
+   "trakt": "westpier-militaer",
+   "opts": {
+    "laenge": 9.6,
+    "variante": "t",
+    "seitentuer": true
+   },
+   "pos": [
+    -476.193,
+    5.0,
+    -95.834
+   ],
+   "rotY": 1.57079,
+   "grundriss": [
+    [
+     -476.19,
+     -93.73
+    ],
+    [
+     -476.19,
+     -97.93
+    ],
+    [
+     -466.59,
+     -97.93
+    ],
+    [
+     -466.59,
+     -93.73
+    ]
+   ]
+  },
+  {
+   "id": "K-westpier-militaer-04",
+   "modell": "ATL-049",
+   "trakt": "westpier-militaer",
+   "opts": {
+    "laenge": 4.8,
+    "variante": "ende"
+   },
+   "pos": [
+    -466.593,
+    5.0,
+    -95.834
+   ],
+   "rotY": 1.57079,
+   "grundriss": [
+    [
+     -466.59,
+     -93.73
+    ],
+    [
+     -466.59,
+     -97.93
+    ],
+    [
+     -461.79,
+     -97.93
+    ],
+    [
+     -461.79,
+     -93.73
+    ]
+   ]
+  }
+ ],
+ "transporter": [
+  {
+   "id": "TR-jumperbucht",
+   "objekt": "OBJ-043",
+   "trakt": "turm",
+   "name": "Jumper-Bucht",
+   "pos": [
+    -1.622,
+    350.3,
+    -7.211
+   ],
+   "rotY": 0.2618
+  },
+  {
+   "id": "TR-turm-ost",
+   "objekt": "OBJ-043",
+   "trakt": "turm-ost",
+   "pos": [
+    -184.684,
+    -22.0,
+    4.486
+   ],
+   "rotY": 4.71239,
+   "name": "Kommandantur und Büros"
+  },
+  {
+   "id": "TR-turm-west",
+   "objekt": "OBJ-043",
+   "trakt": "turm-west",
+   "pos": [
+    -11.145,
+    337.0,
+    -15.706
+   ],
+   "rotY": 1.0472,
+   "kabine": false,
+   "name": "Torhalle (Stargate)"
+  },
+  {
+   "id": "TR-insel-medizin",
+   "objekt": "OBJ-043",
+   "trakt": "insel-medizin",
+   "pos": [
+    -187.341,
+    -1.0,
+    -50.272
+   ],
+   "rotY": 0.5236,
+   "name": "Krankenstation"
+  },
+  {
+   "id": "TR-insel-wohnen",
+   "objekt": "OBJ-043",
+   "trakt": "insel-wohnen",
+   "pos": [
+    -129.003,
+    8.0,
+    -32.235
+   ],
+   "rotY": 4.71239,
+   "name": "Quartiere und Kantine"
+  },
+  {
+   "id": "TR-insel-oeffentlich",
+   "objekt": "OBJ-043",
+   "trakt": "insel-oeffentlich",
+   "pos": [
+    -216.663,
+    -1.0,
+    43.185
+   ],
+   "rotY": 2.09439,
+   "name": "Stuhlraum und Sektion 7"
+  },
+  {
+   "id": "TR-insel-energie",
+   "objekt": "OBJ-043",
+   "trakt": "insel-energie",
+   "pos": [
+    -179.829,
+    8.0,
+    39.064
+   ],
+   "rotY": 4.18879,
+   "name": "Hauptstromraum"
+  },
+  {
+   "id": "TR-insel-kern",
+   "objekt": "OBJ-043",
+   "trakt": "insel-kern",
+   "pos": [
+    -195.601,
+    -10.0,
+    1.983
+   ],
+   "rotY": 7.85398,
+   "name": "ZPM-Raum"
+  },
+  {
+   "id": "TR-insel-stasis",
+   "objekt": "OBJ-043",
+   "trakt": "insel-stasis",
+   "pos": [
+    -187.267,
+    8.0,
+    -43.6
+   ],
+   "rotY": 0.0,
+   "name": "Stasiskammer"
+  },
+  {
+   "id": "TR-insel-plaza",
+   "objekt": "OBJ-043",
+   "trakt": "insel-plaza",
+   "pos": [
+    81.725,
+    14.0,
+    -57.28
+   ],
+   "rotY": -2.61799,
+   "name": "Plaza"
+  },
+  {
+   "id": "TR-ostpier-labore",
+   "objekt": "OBJ-043",
+   "trakt": "ostpier-labore",
+   "pos": [
+    298.831,
+    2.0,
+    -47.621
+   ],
+   "rotY": 4.71239,
+   "name": "Ostpier – Labore"
+  },
+  {
+   "id": "TR-suedpier-fracht",
+   "objekt": "OBJ-043",
+   "trakt": "suedpier-fracht",
+   "pos": [
+    79.6,
+    5.0,
+    245.44
+   ],
+   "rotY": 1.5708,
+   "name": "Südpier – Frachthalle"
+  },
+  {
+   "id": "TR-suedpier-wasser",
+   "objekt": "OBJ-043",
+   "trakt": "suedpier-wasser",
+   "pos": [
+    88.328,
+    -10.0,
+    233.555
+   ],
+   "rotY": 1.0472,
+   "name": "Südpier – Entsalzung"
+  },
+  {
+   "id": "TR-suedwestpier-hangar",
+   "objekt": "OBJ-043",
+   "trakt": "suedwestpier-hangar",
+   "pos": [
+    -463.88,
+    -4.0,
+    364.695
+   ],
+   "rotY": 2.61799,
+   "name": "Südwestpier – Hangar"
+  },
+  {
+   "id": "TR-westpier-militaer",
+   "objekt": "OBJ-043",
+   "trakt": "westpier-militaer",
+   "pos": [
+    -501.393,
+    5.0,
+    -95.834
+   ],
+   "rotY": 1.57079,
+   "name": "Westpier – Waffenkammer"
+  }
+ ],
+ "verbindungen": [
+  {
+   "a": {
+    "raum": "ATL-001",
+    "tuer": "DOOR_konferenz"
+   },
+   "b": {
+    "raum": "ATL-003",
+    "tuer": "DOOR_kontrollraum"
+   },
+   "art": "tuer"
+  },
+  {
+   "a": {
+    "raum": "ATL-001",
+    "tuer": "DOOR_buero"
+   },
+   "b": {
+    "raum": "ATL-005",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer"
+  },
+  {
+   "a": {
+    "raum": "ATL-001",
+    "tuer": "DOOR_balkon"
+   },
+   "b": {
+    "raum": "ATL-048",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer"
+  },
+  {
+   "a": {
+    "raum": "ATL-001",
+    "tuer": "DOOR_jumperbay"
+   },
+   "b": {
+    "raum": "ATL-040",
+    "tuer": "bodenluke"
+   },
+   "art": "luke"
+  },
+  {
+   "a": {
+    "transporter": "TR-turm-ost"
+   },
+   "b": {
+    "korridor": "K-turm-ost-00",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-turm-ost-00",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-004",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-turm-ost-00",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-007",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-turm-ost-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-turm-ost-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-turm-ost-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-008",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-turm-ost-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-turm-ost-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "raum": "ATL-001",
+    "tuer": "DOOR_unten_links"
+   },
+   "b": {
+    "korridor": "K-turm-west-00",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "tuer"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-medizin-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-medizin-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "raum": "ATL-009",
+    "tuer": "DOOR_op"
+   },
+   "b": {
+    "raum": "ATL-010",
+    "tuer": "DOOR_haupt_eingang"
+   },
+   "art": "tuer"
+  },
+  {
+   "a": {
+    "raum": "ATL-009",
+    "tuer": "DOOR_isolation"
+   },
+   "b": {
+    "raum": "ATL-011",
+    "tuer": "DOOR_aussen"
+   },
+   "art": "tuer"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-medizin-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-009",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.31
+  },
+  {
+   "a": {
+    "korridor": "K-insel-medizin-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-012",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.27
+  },
+  {
+   "a": {
+    "korridor": "K-insel-medizin-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-medizin-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-wohnen-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-024",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.89
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-025",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-wohnen-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-02",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-wohnen-03",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-03",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-026",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-03",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-027",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-03",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-wohnen-04",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-04",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-wohnen-05",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-05",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-028",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.29
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-05",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-029",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.43
+  },
+  {
+   "a": {
+    "korridor": "K-insel-wohnen-05",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-wohnen-06",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-oeffentlich-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-043",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-006",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-oeffentlich-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-02",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-oeffentlich-03",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-03",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-044",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 1.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-03",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-019",
+    "tuer": "DOOR_getarnter_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-03",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-oeffentlich-04",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-04",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-oeffentlich-05",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-05",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-046",
+    "tuer": "DOOR_gate"
+   },
+   "art": "tuer",
+   "durchgang_m": 3.74
+  },
+  {
+   "a": {
+    "korridor": "K-insel-oeffentlich-05",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-oeffentlich-06",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-energie-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-energie-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-energie-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-036",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-energie-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-037",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.29
+  },
+  {
+   "a": {
+    "korridor": "K-insel-energie-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-energie-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-kern-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-kern-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-kern-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-038",
+    "tuer": "DOOR_sued"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.3
+  },
+  {
+   "a": {
+    "korridor": "K-insel-kern-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-kern-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-stasis-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-stasis-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-stasis-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-039",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-insel-stasis-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-stasis-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-plaza-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-plaza-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-insel-plaza-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-042",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.55
+  },
+  {
+   "a": {
+    "korridor": "K-insel-plaza-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-insel-plaza-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-014",
+    "tuer": "DOOR_sued"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.28
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-013",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.31
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-02",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-03",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-03",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-015",
+    "tuer": "DOOR_aussen"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-03",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-018",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-03",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-04",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-04",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-05",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-05",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-022",
+    "tuer": "DOOR_haupt"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.46
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-05",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-020",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.29
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-05",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-06",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-06",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-07",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-07",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-023",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.3
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-07",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-016",
+    "tuer": "DOOR_korridor"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.29
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-07",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-08",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-08",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-09",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-09",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-017",
+    "tuer": "DOOR_botanik"
+   },
+   "art": "tuer",
+   "durchgang_m": 2.57
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-09",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-021",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.28
+  },
+  {
+   "a": {
+    "korridor": "K-ostpier-labore-09",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-ostpier-labore-10",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-fracht-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-suedpier-fracht-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-fracht-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-034",
+    "tuer": "DOOR_eingang_mitte"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-fracht-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-035",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-fracht-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-suedpier-fracht-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-wasser-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-suedpier-wasser-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-wasser-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-047",
+    "tuer": "DOOR_sued"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.26
+  },
+  {
+   "a": {
+    "korridor": "K-suedpier-wasser-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-suedpier-wasser-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-suedwestpier-hangar-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-suedwestpier-hangar-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-suedwestpier-hangar-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-041",
+    "tuer": "DOOR_personeneingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-suedwestpier-hangar-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-suedwestpier-hangar-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-00",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-westpier-militaer-01",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-01",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-030",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-01",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-031",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-01",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-westpier-militaer-02",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-02",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-westpier-militaer-03",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-03",
+    "tuer": "DOOR_seite"
+   },
+   "b": {
+    "raum": "ATL-032",
+    "tuer": "DOOR_eingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-03",
+    "tuer": "DOOR_abzweig"
+   },
+   "b": {
+    "raum": "ATL-033",
+    "tuer": "DOOR_haupteingang"
+   },
+   "art": "tuer",
+   "durchgang_m": 0.25
+  },
+  {
+   "a": {
+    "korridor": "K-westpier-militaer-03",
+    "tuer": "DOOR_ende"
+   },
+   "b": {
+    "korridor": "K-westpier-militaer-04",
+    "tuer": "DOOR_anfang"
+   },
+   "art": "offen"
+  },
+  {
+   "art": "transporternetz",
+   "transporter": [
+    "TR-jumperbucht",
+    "TR-turm-ost",
+    "TR-turm-west",
+    "TR-insel-medizin",
+    "TR-insel-wohnen",
+    "TR-insel-oeffentlich",
+    "TR-insel-energie",
+    "TR-insel-kern",
+    "TR-insel-stasis",
+    "TR-insel-plaza",
+    "TR-ostpier-labore",
+    "TR-suedpier-fracht",
+    "TR-suedpier-wasser",
+    "TR-suedwestpier-hangar",
+    "TR-westpier-militaer"
+   ]
+  }
+ ],
+ "spielmarken": {
+  "respawn": {
+   "raum": "ATL-001",
+   "pos": [
+    4.59,
+    341.6,
+    -14.95
+   ],
+   "rotY": 3.4034,
+   "hinweis": "Kontrollraum, obere Ebene der Torhalle; nach Sturz ins Wasser"
+  },
+  "gate": {
+   "raum": "ATL-001",
+   "objekt": "OBJ-001"
+  },
+  "jumper_start": {
+   "raum": "ATL-040"
+  },
+  "flug_grenze_radius": 950,
+  "flug_grenze_hoehe": 400
+ },
+ "pruefung": {
+  "raumueberschneidungen": [],
+  "korridor_konflikte": [],
+  "nicht_platziert": []
+ },
+ "einpassung": {
+  "vorlage": "atlantis_nah.glb",
+  "raster_m": 3.0,
+  "gruppen": {
+   "turmkomplex": {
+    "pos": [
+     -3.0,
+     337.0,
+     -12.0
+    ],
+    "drehung_grad": 15,
+    "im_gebaeude": 0.906,
+    "balkon_im_freien": 1.0
+   },
+   "ostpier-labore": {
+    "pos": [
+     256.0,
+     2.0,
+     -48.0
+    ],
+    "drehung_grad": 180,
+    "im_gebaeude": 1.0
+   },
+   "insel-wohnen": {
+    "pos": [
+     -160.0,
+     8.0,
+     -32.0
+    ],
+    "drehung_grad": 300,
+    "im_gebaeude": 1.0
+   },
+   "insel-oeffentlich": {
+    "pos": [
+     -192.0,
+     -1.0,
+     32.0
+    ],
+    "drehung_grad": 210,
+    "im_gebaeude": 1.0
+   },
+   "insel-medizin": {
+    "pos": [
+     -184.0,
+     -1.0,
+     -32.0
+    ],
+    "drehung_grad": 0,
+    "im_gebaeude": 1.0
+   },
+   "westpier-militaer": {
+    "pos": [
+     -480.0,
+     5.0,
+     -96.0
+    ],
+    "drehung_grad": 180,
+    "im_gebaeude": 1.0
+   },
+   "turm-ost": {
+    "pos": [
+     -192.0,
+     -22.0,
+     0.0
+    ],
+    "drehung_grad": 180,
+    "im_gebaeude": 1.0
+   },
+   "insel-energie": {
+    "pos": [
+     -192.0,
+     8.0,
+     32.0
+    ],
+    "drehung_grad": 150,
+    "im_gebaeude": 1.0
+   },
+   "suedpier-fracht": {
+    "pos": [
+     96.0,
+     5.0,
+     248.0
+    ],
+    "drehung_grad": 60,
+    "im_gebaeude": 1.0
+   },
+   "insel-kern": {
+    "pos": [
+     -184.0,
+     -10.0,
+     8.0
+    ],
+    "drehung_grad": 300,
+    "im_gebaeude": 1.0
+   },
+   "insel-stasis": {
+    "pos": [
+     -192.0,
+     8.0,
+     -32.0
+    ],
+    "drehung_grad": 150,
+    "im_gebaeude": 1.0
+   },
+   "insel-plaza": {
+    "pos": [
+     80.0,
+     14.0,
+     -88.0
+    ],
+    "drehung_grad": 0,
+    "im_gebaeude": 1.0
+   },
+   "suedpier-wasser": {
+    "pos": [
+     96.0,
+     -10.0,
+     248.0
+    ],
+    "drehung_grad": 30,
+    "im_gebaeude": 1.0
+   },
+   "suedwestpier-hangar": {
+    "pos": [
+     -440.0,
+     -4.0,
+     352.0
+    ],
+    "drehung_grad": 180,
+    "im_gebaeude": 1.0
+   }
+  },
+  "hinweis": "Positionen von build/tools/stadt_einpassen.py in die Gebäude der Stadt-Vorlage eingepasst"
+ }
+}

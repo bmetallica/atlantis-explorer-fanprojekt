@@ -1,0 +1,25 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<script type="importmap">{ "imports": { "three": "/tools/three170/node_modules/three/build/three.module.js" } }</script></head><body>
+<script type="module">
+// Liest aus jedem Raummodell Außenmaße (ohne PLACE-Objekte) und alle DOOR_-Knoten (Lage, Richtung, userData)
+import * as THREE from 'three';
+const ids = (await (await fetch('/list')).json()).filter((i) => i.startsWith('ATL-'));
+const out = {};
+for (const id of ids) {
+  try {
+    const root = (await import(`/model/${id}.js`)).create({ sound: false });
+    root.updateMatrixWorld(true);
+    const box = new THREE.Box3();
+    root.traverse((o) => { if (o.isMesh && !/^COL_/.test(o.name)) box.expandByObject(o); });
+    const doors = [];
+    root.traverse((o) => {
+      if (!/^DOOR_/.test(o.name)) return;
+      const p = new THREE.Vector3(), q = new THREE.Quaternion(); o.matrixWorld.decompose(p, q, new THREE.Vector3());
+      const dir = new THREE.Vector3(0, 0, 1).applyQuaternion(q);
+      doors.push({ name: o.name, pos: p.toArray().map((v) => +v.toFixed(2)), richtung: [+dir.x.toFixed(2), +dir.z.toFixed(2)], ...o.userData });
+    });
+    out[id] = { min: box.min.toArray().map((v) => +v.toFixed(2)), max: box.max.toArray().map((v) => +v.toFixed(2)), tueren: doors, enthaelt: root.userData.raum?.enthaelt };
+  } catch (e) { out[id] = { fehler: e.message }; }
+}
+window.result = out;
+</script></body></html>

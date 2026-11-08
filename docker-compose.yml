@@ -1,0 +1,18 @@
+services:
+  sga-api:
+    build: .
+    container_name: sga-atlantis-api
+    ports:
+      - "8324:8324"
+    volumes:
+      - ./data:/app/data
+      - ./assets/images:/app/images
+      - ./src/game:/app/game:ro          # Spiel: Änderungen ohne Neubau sichtbar
+    environment:
+      - SGA_PUBLIC_HOST=localhost:8324
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8324/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

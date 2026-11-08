@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<script type="importmap">
+{ "imports": { "three": "/tools/node_modules/three/build/three.module.js", "three/addons/": "/tools/node_modules/three/examples/jsm/" } }
+</script>
+<style>html,body{margin:0;background:#0b1017}canvas{display:block}</style></head>
+<body><canvas id="c" width="960" height="540"></canvas>
+<script type="module">
+// Streaming-Prototyp: lädt mehrere Räume samt PLACE_-Objekten nebeneinander und misst
+// Ladezeit, Draw Calls, Dreiecke, Materialien, Speicher und Bildzeit – roh und nach dem Zusammenführen
+// statischer Meshes je Material (BufferGeometryUtils.mergeGeometries).
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+const KIT = {
+  wall: [0xaab4c0, .55, .45], wallDark: [0x4a6a8c, .6, .45], copper: [0xb08a59, .8, .35], pillar: [0xd9e0e6, .35, .4],
+  hull: [0xf0f0ec, .2, .4], floor: [0x4f4a42, .5, .6], floorUpper: [0x5a544b, .5, .6], ceiling: [0x2e3135, .4, .7],
+  stair: [0x8a6e4b, .7, .45], door: [0x8e98a4, .75, .35], glass: [0x6aa8e0, .1, .05], rail: [0xc49a5e, .9, .2],
+  glow: [0x6fe3ff, 0, .5, 0x6fe3ff], amberGlow: [0xffb060, 0, .5, 0xffb060],
+};
+const kitMat = {};
+const kit = (name) => {
+  const k = name.slice(4);
+  if (!kitMat[k]) {
+    const [c, m, r, e] = KIT[k] || [0xff00ff, 0, 1];
+    kitMat[k] = new THREE.MeshStandardMaterial({ name, color: c, metalness: m, roughness: r, emissive: e || 0, emissiveIntensity: e ? 1.6 : 0, transparent: k === 'glass', opacity: k === 'glass' ? 0.35 : 1 });
+  }
+  return kitMat[k];
+};
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.info.autoReset = false;
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x10161e);
+scene.add(new THREE.HemisphereLight(0xbfd8ff, 0x1a1410, 0.8));
+const cam = new THREE.PerspectiveCamera(70, 960 / 540, 0.05, 400);
+
+const params = new URLSearchParams(location.search);
+const rooms = params.get('rooms').split(',');
+const merge = params.get('merge') === '1';
+const maxLights = +(params.get('lights') ?? 999);
+const vc = params.get('vc') === '1';   // Farben in Vertex-Farben einbacken → weniger Materialien
+const t0 = performance.now();
+const modCache = {};
+const imp = (u) => (modCache[u] ||= import(u));
+const isDefaultOBR = (o) => o.onBeforeRender === THREE.Object3D.prototype.onBeforeRender;
+const lamps = [];
+const dynamicRoots = [];   // Objekte mit Funktionen/Animation – bleiben einzeln
+let offsetX = 0;
+const roomInfo = [];
+const roomGroups = await Promise.all(rooms.map(async (rid) => {
+  const m = await imp(`/roommodel/${rid}.js`);
+  const root = m.create({ sound: false });
+  root.updateMatrixWorld(true);
+  const places = [];
+  root.traverse((o) => { const mm = o.name.match(/^PLACE_(OBJ-\d{3})/); if (mm) places.push([mm[1], o]); });
+  const insts = await Promise.all(places.map(async ([oid, anchor]) => {
+    try {
+      const om = await imp(`/objmodel/${oid}.js`);
+      const inst = om.create({ sound: false });
+      anchor.matrixWorld.decompose(inst.position, inst.quaternion, inst.scale);
+      inst.userData.objId = oid;
+      return inst;
+    } catch (e) { return null; }
+  }));
+  const g = new THREE.Group(); g.name = rid; g.add(root);
+  insts.forEach((i) => i && g.add(i));
+  return { rid, g, root, insts: insts.filter(Boolean) };
+}));
+const tLoaded = performance.now();
+for (const r of roomGroups) {
+  const b = new THREE.Box3().setFromObject(r.root);
+  r.g.position.x = offsetX - b.min.x;
+  offsetX += b.max.x - b.min.x + 4;
+  scene.add(r.g);
+  roomInfo.push({ id: r.rid, w: +(b.max.x - b.min.x).toFixed(1), d: +(b.max.z - b.min.z).toFixed(1), objekte: r.insts.length });
+}
+scene.updateMatrixWorld(true);
+// Aufbereiten: COL_ ausblenden, KIT_-Materialien, LAMP_-Lichter
+const meshes = [];
+scene.traverse((o) => {
+  if (/^COL_/.test(o.name)) { o.visible = false; return; }
+  if (o.isMesh) { const ms = [].concat(o.material).map((x) => (x && /^KIT_/.test(x.name) ? kit(x.name) : x)); o.material = Array.isArray(o.material) ? ms : ms[0]; }
+  if (/^LAMP_/.test(o.name)) lamps.push(o);
+});
+// nur die stärksten/nächsten N Lampen als echte Lichter
+lamps.slice(0, maxLights).forEach((o) => o.add(new THREE.PointLight(o.userData.color || '#ffb060', (o.userData.intensity ?? 15) * 0.4, o.userData.distance ?? 10, 2)));
+
+function count() {
+  let mesh = 0, tris = 0; const mats = new Set();
+  scene.traverse((o) => {
+    let vis = true; for (let p = o; p; p = p.parent) if (!p.visible) { vis = false; break; }
+    if (!vis || !o.isMesh) return;
+    mesh++; [].concat(o.material).forEach((x) => mats.add(x));
+    const g = o.geometry; const n = g.index ? g.index.count / 3 : g.attributes.position.count / 3;
+    tris += n * (o.isInstancedMesh ? o.count : 1);
+  });
+  return { meshes: mesh, materialien: mats.size, dreiecke: Math.round(tris) };
+}
+const before = count();
+let mergeMs = 0, mergedInfo = null;
+if (merge) {
+  const tm = performance.now();
+  // Beobachtung statt Vermutung: Animationen laufen lassen, danach jede Aktion (actions) einmal
+  // auslösen und wieder zurück – jedes Mesh, das dabei Lage, Sichtbarkeit oder Material ändert, bleibt dynamisch,
+  // ebenso Meshes mit Canvas-Texturen (Displays) oder eigenem onBeforeRender. Der Rest wird zusammengeführt.
+  const dyn = new Set();
+  const mkey = (x) => x ? [x.color?.getHex(), x.emissive?.getHex(), x.emissiveIntensity, x.opacity, x.visible].join('|') : '';
+  // nomat=1: Materialänderungen (Leuchten, Farbe) zählen nicht als Bewegung – das Material bleibt beim Zusammenführen dasselbe Objekt
+  const nomat = params.get('nomat') === '1';
+  const state = (o) => o.matrixWorld.elements.join(',') + o.visible + (nomat ? '' : [].concat(o.material).map(mkey).join());
+  const all = []; scene.traverse((o) => { if (o.isMesh) all.push(o); });
+  const snap = new Map(all.map((o) => [o, state(o)]));
+  const matSnap = new Map(); all.forEach((o) => [].concat(o.material).forEach((x) => x && matSnap.set(x, mkey(x))));
+  const matChanged = new Set();
+  const probe = new THREE.WebGLRenderTarget(8, 8);
+  all.forEach((o) => { o.userData._fc = o.frustumCulled; o.frustumCulled = false; });
+  const run = async (ms) => {
+    renderer.setRenderTarget(probe);
+    const tEnd = performance.now() + ms;
+    while (performance.now() < tEnd) { renderer.render(scene, cam); await new Promise((r) => setTimeout(r, 50)); }
+    renderer.setRenderTarget(null);
+    scene.updateMatrixWorld(true);
+    all.forEach((o) => { if (state(o) !== snap.get(o)) dyn.add(o); });
+    for (const [x, k] of matSnap) if (mkey(x) !== k) matChanged.add(x);
+  };
+  await run(1500);
+  const acts = [];
+  for (const r of roomGroups) [r.root, ...r.insts].forEach((i) => (i.userData.actions || []).forEach((a) => acts.push(a)));
+  for (const a of acts) { try { a.run(); } catch (e) {} }
+  await run(3000);
+  for (const a of acts) { try { a.run(); } catch (e) {} }
+  await run(3000);
+  all.forEach((o) => { o.frustumCulled = o.userData._fc; if (!isDefaultOBR(o) || [].concat(o.material).some((x) => x?.map?.isCanvasTexture)) dyn.add(o); });
+  const changed = dyn.size;
+  const inDyn = (o) => { for (let p = o; p; p = p.parent) if (dyn.has(p)) return true; return false; };
+  // Materialien mit gleichen Parametern zusammenlegen
+  const matKey = (x) => (nomat && matChanged.has(x)) ? x.uuid : [x.type, x.color?.getHex(), x.emissive?.getHex(), x.emissiveIntensity, x.metalness, x.roughness, x.opacity, x.transparent, x.side, x.map?.uuid, x.emissiveMap?.uuid, x.vertexColors].join('|');
+  const matByKey = new Map();
+  const buckets = new Map();
+  const remove = [];
+  scene.traverse((o) => {
+    if (!o.isMesh || o.isInstancedMesh || Array.isArray(o.material) || !o.visible || inDyn(o)) return;
+    let vis = true; for (let p = o; p; p = p.parent) if (!p.visible) { vis = false; break; }
+    if (!vis) return;
+    const x = o.material;
+    const bake = vc && x.isMeshStandardMaterial && !x.map && !x.emissiveMap && !x.transparent && !x.vertexColors;
+    const q = (v) => Math.round(v * 10) / 10;
+    const k = bake ? ['VC', q(x.metalness), q(x.roughness), x.emissiveIntensity > 0 && x.emissive.getHex() ? x.emissive.getHex() + '/' + q(x.emissiveIntensity) : 0, x.side].join('|') : matKey(x);
+    if (!matByKey.has(k)) matByKey.set(k, bake ? new THREE.MeshStandardMaterial({ vertexColors: true, metalness: q(x.metalness), roughness: q(x.roughness), emissive: x.emissive, emissiveIntensity: x.emissiveIntensity, side: x.side }) : x);
+    let g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
+    for (const a of Object.keys(g.attributes)) if (!['position', 'normal', 'uv'].includes(a)) g.deleteAttribute(a);
+    if (!g.attributes.normal) g.computeVertexNormals();
+    if (!g.attributes.uv) g.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
+    g.morphAttributes = {};
+    if (bake) { const n = g.attributes.position.count, c = new Float32Array(n * 3); for (let i = 0; i < n; i++) { c[i * 3] = x.color.r; c[i * 3 + 1] = x.color.g; c[i * 3 + 2] = x.color.b; } g.setAttribute('color', new THREE.BufferAttribute(c, 3)); }
+    g.applyMatrix4(o.matrixWorld);
+    // je Raum zusammenführen, damit Räume einzeln entladen werden können
+    let room = o; while (room.parent && room.parent !== scene) room = room.parent;
+    const bk = room.name + '#' + k;
+    if (!buckets.has(bk)) buckets.set(bk, { mat: matByKey.get(k), geos: [] });
+    buckets.get(bk).geos.push(g);
+    remove.push(o);
+  });
+  remove.forEach((o) => { o.visible = false; o.userData._merged = true; });
+  const mg = new THREE.Group(); mg.name = 'merged';
+  let failed = 0;
+  for (const { mat, geos } of buckets.values()) {
+    const g = mergeGeometries(geos, false);
+    if (!g) { failed++; continue; }
+    mg.add(new THREE.Mesh(g, mat));
+    geos.forEach((x) => x.dispose());
+  }
+  scene.add(mg);
+  mergeMs = performance.now() - tm;
+  mergedInfo = { animierteMaterialien: matChanged.size, beobachtetDynamisch: changed, statischZusammengefuehrt: remove.length, gruppen: buckets.size, fehlgeschlagen: failed, dynamischeObjekte: dyn.size };
+}
+const after = count();
+// Kamera im ersten Raum, Blick quer über alle Räume
+const b0 = new THREE.Box3().setFromObject(roomGroups[0].g);
+cam.position.set(b0.min.x + 1.5, 1.7, (b0.min.z + b0.max.z) / 2);
+cam.lookAt(offsetX, 1.5, (b0.min.z + b0.max.z) / 2);
+const prof = {};
+if (params.get('prof') === '1') {
+  for (const r of roomGroups) [[r.rid, r.root], ...r.insts.map((i) => [i.name || i.userData.id || 'obj', i])].forEach(([id, top]) => {
+    top.traverse((o) => {
+      if (isDefaultOBR(o)) return;
+      const f = o.onBeforeRender; const key = (top === r.root ? r.rid : (top.userData.objId || top.name || id));
+      o.onBeforeRender = function (...a) { const t = performance.now(); f.apply(this, a); prof[key] = (prof[key] || 0) + performance.now() - t; };
+    });
+  });
+}
+// texstat=1: Textur-Uploads zählen (welche Objekte laden wie viele Pixel pro Sekunde hoch)
+const texStat = new Map();
+if (params.get('texstat') === '1') {
+  const owner = new Map();
+  for (const r of roomGroups) [r.root, ...r.insts].forEach((top) => top.traverse((o) => { if (o.isMesh) [].concat(o.material).forEach((m) => m && ['map', 'emissiveMap'].forEach((k) => m[k] && owner.set(m[k], top === r.root ? r.rid : top.userData.objId))); }));
+  const desc = Object.getOwnPropertyDescriptor(THREE.Texture.prototype, 'needsUpdate');
+  Object.defineProperty(THREE.Texture.prototype, 'needsUpdate', { set(v) { if (v && owner.has(this)) { const k = owner.get(this); const im = this.image || {}; const e = texStat.get(k) || { uploads: 0, px: 0, groesse: `${im.width}×${im.height}` }; e.uploads++; e.px += (im.width || 0) * (im.height || 0); texStat.set(k, e); } desc.set.call(this, v); }, configurable: true });
+}
+const tc = performance.now();
+await renderer.compileAsync(scene, cam);
+const compileMs = performance.now() - tc;
+renderer.info.reset(); renderer.render(scene, cam);
+const calls = renderer.info.render.calls;
+// Bildzeit: Animationen laufen mit (onBeforeRender)
+const frames = +(params.get('frames') ?? 30);
+texStat.clear();
+const tf = performance.now();
+for (let i = 0; i < frames; i++) { renderer.render(scene, cam); renderer.getContext().finish(); }
+const frameMs = (performance.now() - tf) / frames;
+const tcpu = performance.now(); const small = new THREE.WebGLRenderTarget(1, 1); renderer.setRenderTarget(small); for (let i = 0; i < frames; i++) renderer.render(scene, cam); renderer.setRenderTarget(null); const cpuMs = (performance.now() - tcpu) / frames;
+for (const k in prof) prof[k] = +(prof[k] / (frames * 2 + 1)).toFixed(2);
+// objcost=1: jedes Objekt einzeln ausblenden und messen, wie viel schneller das Bild wird
+let objCost = null;
+if (params.get('objcost') === '1') {
+  const px1 = new Uint8Array(4); const glc = renderer.getContext();
+  const time = (n) => { const t = performance.now(); for (let i = 0; i < n; i++) { renderer.render(scene, cam); glc.readPixels(0, 0, 1, 1, glc.RGBA, glc.UNSIGNED_BYTE, px1); } return (performance.now() - t) / n; };
+  time(2); const base = time(4);
+  const byId = new Map();
+  for (const r of roomGroups) for (const i of r.insts) { const k = i.userData.objId; if (!byId.has(k)) byId.set(k, []); byId.get(k).push(i); }
+  objCost = { basisMs: +base.toFixed(1), objekte: {} };
+  for (const [k, list] of byId) { list.forEach((i) => (i.visible = false)); const t = time(3); list.forEach((i) => (i.visible = true)); objCost.objekte[k + ' ×' + list.length] = +(base - t).toFixed(1); }
+  objCost.objekte = Object.fromEntries(Object.entries(objCost.objekte).sort((p, q) => q[1] - p[1]));
+}
+window.result = { objCost,
+  rooms: roomInfo, merge, vertexFarben: vc, lichter: Math.min(maxLights, lamps.length), lampenGesamt: lamps.length,
+  ladenMs: Math.round(tLoaded - t0), mergeMs: Math.round(mergeMs), compileMs: Math.round(compileMs),
+  vorher: before, nachher: after, drawCalls: calls, programme: renderer.info.programs.length,
+  geometrien: renderer.info.memory.geometries, texturen: renderer.info.memory.textures,
+  heapMB: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null,
+  bildMs: +frameMs.toFixed(1), merged: mergedInfo, renderKleinMs: +cpuMs.toFixed(1), texturUploads: Object.fromEntries([...texStat].map(([k, e]) => [k, { ...e, proSek: +(e.uploads / ((performance.now() - tf) / 1000)).toFixed(1), mpxProSek: +(e.px / 1e6 / ((performance.now() - tf) / 1000)).toFixed(2) }]).sort((p, q) => q[1].px - p[1].px)), texturMessSek: +((performance.now() - tf) / 1000).toFixed(1), obrMsProBild: Object.fromEntries(Object.entries(prof).sort((p, q) => q[1] - p[1]).slice(0, 15)),
+};
+window.ready = true;
+</script></body></html>
