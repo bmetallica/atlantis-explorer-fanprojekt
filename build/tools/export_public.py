@@ -62,7 +62,7 @@ for liste in (db.get("rooms", []), db.get("objects", [])):
 # README-Bilder und Begleitdateien
 if BILDER and BILDER.is_dir():
     shutil.copytree(BILDER, ZIEL / "docs/bilder")
-for name in ("README.md", "CREDITS.md", ".gitignore"):
+for name in ("README.md", "CREDITS.md", "LICENSE", ".gitignore"):
     q = QUELLE / "build/public" / name
     if q.exists():
         shutil.copy2(q, ZIEL / name)

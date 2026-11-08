@@ -99,5 +99,11 @@ Occlusion Query ausgeblendet; Kollision mit three-mesh-bvh.
 
 ## Credits
 
-Stadtmodell „Atlantis From Stargate Atlantis“ von **taichl** und Puddle-Jumper-Vorlage, beide unter
-**Creative Commons – Namensnennung (CC BY)**, für das Spiel verändert. Vollständige Angaben: [CREDITS.md](CREDITS.md).
+Stadtmodell [„Atlantis From Stargate Atlantis“](https://www.thingiverse.com/thing:5534313) von **taichl** und
+[Puddle-Jumper-Vorlage](https://www.thingiverse.com/thing:3109110), beide unter **Creative Commons – Namensnennung (CC BY)**,
+für das Spiel verändert. Vollständige Angaben: [CREDITS.md](CREDITS.md).
+
+## Lizenz
+
+Eigener Code: [MIT](LICENSE). Ausgenommen sind die CC-BY-Vorlagen und ihre Ableitungen (CC BY) sowie alle Rechte an
+Stargate Atlantis selbst – siehe [CREDITS.md](CREDITS.md).

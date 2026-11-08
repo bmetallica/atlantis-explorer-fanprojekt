@@ -9,21 +9,24 @@ Es werden keine Bilder, Videos oder Tonaufnahmen aus der Serie verwendet.
 
 ### Stadtmodell
 - **Titel:** „Atlantis From Stargate Atlantis“
-- **Urheber:** taichl
-- **Quelle:** _Link folgt_
+- **Urheber:** taichl (Martin Taichl)
+- **Quelle:** <https://www.thingiverse.com/thing:5534313>
 - **Lizenz:** Creative Commons – Namensnennung (CC BY)
 - **Änderungen:** gedreht und auf ca. 1,3 km Durchmesser skaliert, in 56 Kacheln zerlegt, eine Fernstufe schonend
   vereinfacht, innerhalb der Räume und Gänge ausgeschnitten, nach Flächenausrichtung eingefärbt, in GLB umgewandelt
   (`build/tools/stadt_stl.py`, `build/tools/stadt_kacheln.py`). Ergebnis: `data/stadt/aussen/*.glb`.
 
 ### Puddle Jumper
-- **Titel:** _folgt_
-- **Urheber:** _folgt_
-- **Quelle:** _Link folgt_
+- **Quelle (mit Titel und Urheber):** <https://www.thingiverse.com/thing:3109110>
 - **Lizenz:** Creative Commons – Namensnennung (CC BY)
 - **Änderungen:** Außenhülle ausgehöhlt und mit Kabine versehen, Heckklappe und Cockpitfenster ergänzt,
   Antriebsgondeln einfahrbar gemacht, vereinfacht und als Spielmodul eingebettet
   (`build/tools/jumper_stl.py`, `build/tools/jumper_vorlage.js`). Ergebnis: `data/models/OBJ-009/`.
+
+## Lizenz dieses Projekts
+Der eigene Code dieses Projekts steht unter der MIT-Lizenz (siehe [LICENSE](LICENSE)). Ausgenommen sind die oben
+genannten CC-BY-Vorlagen und ihre Ableitungen (es gilt CC BY mit Namensnennung) sowie alle Rechte an Stargate
+Atlantis selbst, die dieses Projekt nicht vergeben kann.
 
 ## Software
 - [three.js](https://threejs.org) – MIT-Lizenz

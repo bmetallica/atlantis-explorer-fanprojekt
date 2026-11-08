@@ -386,8 +386,9 @@ export function init(ctx) {
   // Info & Credits (Namensnennung nach CC BY, Fanprojekt-Hinweis) – Claude
   const CREDITS = [
     ['Atlantis Explorer – Fanprojekt', 'Inoffizielles, nicht-kommerzielles Fanprojekt. Stargate Atlantis und alle zugehörigen Namen, Designs und Marken gehören den jeweiligen Rechteinhabern (MGM / Amazon MGM Studios). Dieses Projekt ist mit ihnen nicht verbunden und wird von ihnen nicht unterstützt.'],
-    ['Stadtmodell', '„Atlantis From Stargate Atlantis“ von taichl, lizenziert unter Creative Commons – Namensnennung (CC BY). Für das Spiel verändert: gedreht, skaliert, in Kacheln zerlegt, für die Fernstufe vereinfacht, innerhalb der Räume ausgeschnitten, neu eingefärbt.'],
-    ['Puddle Jumper', 'Vorlage lizenziert unter Creative Commons – Namensnennung (CC BY); Urheber und Quelle siehe CREDITS.md. Für das Spiel verändert: Hülle ausgehöhlt, Heckklappe und Fenster ergänzt, Antriebsgondeln einfahrbar gemacht.'],
+    ['Stadtmodell', '„Atlantis From Stargate Atlantis“ von taichl (thingiverse.com/thing:5534313), lizenziert unter Creative Commons – Namensnennung (CC BY). Für das Spiel verändert: gedreht, skaliert, in Kacheln zerlegt, für die Fernstufe vereinfacht, innerhalb der Räume ausgeschnitten, neu eingefärbt.'],
+    ['Puddle Jumper', 'Vorlage von thingiverse.com/thing:3109110, lizenziert unter Creative Commons – Namensnennung (CC BY). Für das Spiel verändert: Hülle ausgehöhlt, Heckklappe und Fenster ergänzt, Antriebsgondeln einfahrbar gemacht.'],
+    ['Lizenz', 'Eigener Code unter MIT-Lizenz; CC-BY-Vorlagen und Rechte an Stargate Atlantis ausgenommen.'],
     ['Technik', 'three.js (MIT), three-mesh-bvh (MIT). Räume, Objekte und Spielmodule wurden mit KI-Unterstützung erstellt (Claude, MiniMax, GLM, DeepSeek).'],
   ];
   function zeigeCredits() {
